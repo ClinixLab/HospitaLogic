@@ -1,0 +1,157 @@
+datasource db {
+  provider = "mysql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Patient {
+  patient_id Int    @id @default(autoincrement())
+  name       String
+  gender     String
+  phone      String
+
+  // relations
+  pii          PatientPII?
+  appointments Appointment[]
+  treatments   Treatment[]
+  bills        Bill[]
+  login        Login? // 1:1 optional to Login
+}
+
+model PatientPII {
+  patient_id Int      @id
+  DOB        DateTime
+  address    String
+
+  patient Patient @relation(fields: [patient_id], references: [patient_id])
+}
+
+model Diagnosis {
+  diagnosis_id Int         @id @default(autoincrement())
+  code         String
+  description  String
+  treatments   Treatment[]
+}
+
+model Department {
+  department_id Int      @id @default(autoincrement())
+  name          String
+  location      String
+  doctors       Doctor[]
+}
+
+model Specialty {
+  specialty_id Int      @id @default(autoincrement())
+  name         String
+  description  String
+  doctors      Doctor[]
+}
+
+model Doctor {
+  doctor_id     Int    @id @default(autoincrement())
+  name          String
+  phone         String
+  department_id Int
+  specialty_id  Int
+
+  treatments   Treatment[]
+  appointments Appointment[]
+  login        Login? // 1:1 optional to Login
+
+  department Department @relation(fields: [department_id], references: [department_id])
+  specialty  Specialty  @relation(fields: [specialty_id], references: [specialty_id])
+}
+
+model Appointment {
+  appointment_id Int      @id @default(autoincrement())
+  patient_id     Int
+  doctor_id      Int
+  date           DateTime
+  time           String
+  status         String
+
+  patient Patient @relation(fields: [patient_id], references: [patient_id])
+  doctor  Doctor  @relation(fields: [doctor_id], references: [doctor_id])
+}
+
+model Treatment {
+  treatment_id   Int      @id @default(autoincrement())
+  patient_id     Int
+  doctor_id      Int
+  diagnosis_id   Int
+  treatment_date DateTime
+
+  medicines      TreatmentMedicine[]
+  billTreatments BillTreatment[]
+
+  patient   Patient   @relation(fields: [patient_id], references: [patient_id])
+  doctor    Doctor    @relation(fields: [doctor_id], references: [doctor_id])
+  diagnosis Diagnosis @relation(fields: [diagnosis_id], references: [diagnosis_id])
+}
+
+model Medicine {
+  medicine_id Int     @id @default(autoincrement())
+  name        String
+  quantity    Int
+  price       Decimal @db.Decimal(10, 2)
+
+  usedIn TreatmentMedicine[]
+}
+
+model TreatmentMedicine {
+  treatment_medicine_id Int @id @default(autoincrement())
+  treatment_id          Int
+  medicine_id           Int
+  quantity              Int
+
+  treatment Treatment @relation(fields: [treatment_id], references: [treatment_id])
+  medicine  Medicine  @relation(fields: [medicine_id], references: [medicine_id])
+}
+
+model Bill {
+  bill_id        Int      @id @default(autoincrement())
+  patient_id     Int
+  total_amount   Decimal  @db.Decimal(10, 2)
+  payment_status String
+  bill_date      DateTime
+
+  treatments BillTreatment[]
+  patient    Patient         @relation(fields: [patient_id], references: [patient_id])
+}
+
+model BillTreatment {
+  bill_treatment_id Int @id @default(autoincrement())
+  bill_id           Int
+  treatment_id      Int @unique // each treatment appears in at most one bill
+
+  bill      Bill      @relation(fields: [bill_id], references: [bill_id])
+  treatment Treatment @relation(fields: [treatment_id], references: [treatment_id])
+}
+
+model Login {
+  user_id         Int    @id @default(autoincrement())
+  username        String @unique
+  hashed_password String
+  role            String // "admin", "doctor", "staff", "patient", ...
+
+  patient_id Int? @unique
+  doctor_id  Int? @unique
+
+  patient Patient? @relation(fields: [patient_id], references: [patient_id])
+  doctor  Doctor?  @relation(fields: [doctor_id], references: [doctor_id])
+
+  accessLogs AccessLog[]
+}
+
+model AccessLog {
+  access_id   Int      @id @default(autoincrement())
+  user_id     Int
+  entity_type String // e.g. "AUTH", "PATIENT"
+  entity_id   Int
+  action      String // e.g. "LOGIN"
+  access_time DateTime @default(now())
+
+  user Login @relation(fields: [user_id], references: [user_id])
+}
