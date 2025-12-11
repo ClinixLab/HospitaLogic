@@ -1,10 +1,12 @@
+generator client {
+  provider = "prisma-client"
+  output = "../app/generated/prisma"
+}
+
 datasource db {
   provider = "mysql"
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
 
 model Patient {
   patient_id Int    @id @default(autoincrement())
