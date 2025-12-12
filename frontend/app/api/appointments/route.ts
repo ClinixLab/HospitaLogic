@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/db";
 import { Prisma } from "@/app/generated/prisma/client";
+import { parseUuid } from "@/lib/uuid"; 
 
 const CLINIC = {
   open: "09:00",
@@ -36,40 +37,76 @@ function isClinicSlot(t: string) {
   const close = toMinutes(CLINIC.close);
   const ls = toMinutes(CLINIC.lunchStart);
   const le = toMinutes(CLINIC.lunchEnd);
+
   if (m < open) return false;
   if (m + 30 > close) return false;
   if (m >= ls && m < le) return false;
   return true;
 }
 
-export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+function sameLocalYMD(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
 
-  const role = (session.user as any).role;
-  const patient_id = (session.user as any).patient_id;
-  const doctor_id = (session.user as any).doctor_id;
+// กันจองเวลาย้อนหลัง: ถ้าวันนี้ ต้อง >= “รอบถัดไป” (ปัดขึ้นครึ่งชั่วโมง)
+function isPastSlot(dateOnly: Date, timeHHmm: string) {
+  const now = new Date();
+  if (!sameLocalYMD(dateOnly, now)) return dateOnly.getTime() < new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const nextSlot = nowMin % 30 === 0 ? nowMin : nowMin + (30 - (nowMin % 30));
+  return toMinutes(timeHHmm) < nextSlot;
+}
+
+async function getAuthed() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) return null;
+
+  const uid = parseUuid((session.user as any).id ?? null); // UUID string
+  if (!uid) return null;
+
+  const role = (session.user as any).role as "PATIENT" | "DOCTOR" | undefined;
+  if (!role) return null;
+
+  return { uid, role };
+}
+
+export async function GET() {
+  const auth = await getAuthed();
+  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const { uid, role } = auth;
 
   // patient -> ดูของตัวเอง
-  if (role === "PATIENT" && patient_id) {
+  if (role === "PATIENT") {
     const appointments = await prisma.appointment.findMany({
-      where: { patient_id: Number(patient_id) },
+      where: { patient_id: uid }, // ✅ string uuid
       orderBy: [{ date: "desc" }, { time: "desc" }],
       select: {
         appointment_id: true,
         date: true,
         time: true,
         status: true,
-        doctor: { select: { doctor_id: true, name: true, specialty: { select: { name: true } } } },
+        doctor: {
+          select: {
+            doctor_id: true,
+            name: true,
+            specialty: { select: { name: true } },
+          },
+        },
       },
     });
     return NextResponse.json({ appointments });
   }
 
   // doctor -> ดูของตัวเอง
-  if (role === "DOCTOR" && doctor_id) {
+  if (role === "DOCTOR") {
     const appointments = await prisma.appointment.findMany({
-      where: { doctor_id: Number(doctor_id) },
+      where: { doctor_id: uid }, // ✅ string uuid
       orderBy: [{ date: "desc" }, { time: "desc" }],
       select: {
         appointment_id: true,
@@ -86,34 +123,26 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const auth = await getAuthed(); // ของคุณต้องมีอยู่แล้วจากไฟล์ล่าสุด
+  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-  const role = (session.user as any).role;
-  const patient_id = (session.user as any).patient_id;
-
-  // Forbidden มักเกิดตรงนี้: role ไม่ใช่ PATIENT หรือ login ไม่ผูก patient_id
-  if (role !== "PATIENT" || !patient_id) {
-    return NextResponse.json(
-      { message: "Forbidden (role must be PATIENT and login must link patient_id)" },
-      { status: 403 }
-    );
+  const { uid: patient_id, role } = auth;
+  if (role !== "PATIENT") {
+    return NextResponse.json({ message: "Forbidden (role must be PATIENT)" }, { status: 403 });
   }
 
   const body = await req.json().catch(() => null);
 
-  const doctor_id = Number(body?.doctor_id);
-  const specialty_id = Number(body?.specialty_id);
-  const dateStr = String(body?.date ?? ""); // "YYYY-MM-DD"
-  const timeStr = String(body?.time ?? ""); // "HH:mm"
+  const doctor_id = parseUuid(body?.doctor_id ?? null); // ✅ UUID
+  const dateStr = String(body?.date ?? "");
+  const timeStr = String(body?.time ?? "");
   const symptoms = typeof body?.symptoms === "string" ? body.symptoms.trim() : "";
 
-  if (!doctor_id || Number.isNaN(doctor_id)) {
-    return NextResponse.json({ message: "doctor_id is required" }, { status: 400 });
-  }
-  if (!specialty_id || Number.isNaN(specialty_id)) {
-    return NextResponse.json({ message: "specialty_id is required" }, { status: 400 });
-  }
+  // optional (ถ้าหน้ายังส่งมาก็รับไว้)
+  const specialty_id = body?.specialty_id ? Number(body.specialty_id) : null;
+
+  if (!doctor_id) return NextResponse.json({ message: "doctor_id is required (uuid)" }, { status: 400 });
+  if (!symptoms) return NextResponse.json({ message: "symptoms is required" }, { status: 400 });
 
   const date = normalizeDateOnly(dateStr);
   if (!date) return NextResponse.json({ message: "date must be YYYY-MM-DD" }, { status: 400 });
@@ -122,31 +151,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "time invalid (must be clinic 30-min slot)" }, { status: 400 });
   }
 
-  // ถ้าคุณยังไม่เก็บ symptoms ใน DB ก็แค่บังคับให้กรอกเพื่อส่งให้หมอ/แสดงหน้า summary ได้
-  if (!symptoms) {
-    return NextResponse.json({ message: "symptoms is required" }, { status: 400 });
+  if (isPastSlot(date, timeStr)) {
+    return NextResponse.json({ message: "time is in the past" }, { status: 400 });
   }
 
-  // validate doctor belongs to specialty
-  const doctor = await prisma.doctor.findFirst({
-    where: { doctor_id, specialty_id },
-    select: { doctor_id: true },
+  // ✅ validate ว่าหมอมีจริง + (ถ้ามี specialty_id ส่งมา) ต้องตรงกัน
+  const doctor = await prisma.doctor.findUnique({
+    where: { doctor_id },
+    select: { doctor_id: true, specialty_id: true },
   });
   if (!doctor) {
+    return NextResponse.json({ message: "Doctor not found" }, { status: 400 });
+  }
+  if (specialty_id && doctor.specialty_id !== specialty_id) {
     return NextResponse.json({ message: "Doctor not in selected specialty" }, { status: 400 });
   }
 
-  // create + กันทับด้วย unique (P2002)
   try {
     const appointment = await prisma.appointment.create({
       data: {
-        patient_id: Number(patient_id),
-        doctor_id,
+        patient_id, // ✅ string uuid
+        doctor_id,  // ✅ string uuid
         date,
         time: timeStr,
         status: "PENDING",
-        // ถ้าเพิ่ม field symptoms ใน schema Appointment ค่อยเปิดบรรทัดนี้:
-        // symptoms,
       },
       select: { appointment_id: true, status: true, doctor_id: true, date: true, time: true },
     });

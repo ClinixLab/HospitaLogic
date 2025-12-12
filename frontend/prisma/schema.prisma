@@ -37,19 +37,26 @@ model Diagnosis {
 }
 
 model Department {
-  department_id Int    @id @default(autoincrement())
+  department_id Int @id @default(autoincrement())
   name          String
   location      String
-  doctors       Doctor[]
+
+  doctors     Doctor[]
+  specialties Specialty[]   
 }
 
 model Specialty {
-  specialty_id Int    @id @default(autoincrement())
-  name         String
-  description  String
-  doctors      Doctor[]
-}
+  specialty_id  Int @id @default(autoincrement())
+  name          String
+  description   String
 
+  department_id Int?         
+  department    Department?  @relation(fields: [department_id], references: [department_id])
+
+  doctors Doctor[]
+
+  @@index([department_id])
+}
 model Doctor {
   doctor_id     String @id @db.Char(36) // = Login.user_id
   name          String

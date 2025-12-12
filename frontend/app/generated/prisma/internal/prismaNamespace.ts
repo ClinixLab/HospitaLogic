@@ -1420,7 +1420,8 @@ export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof
 export const SpecialtyScalarFieldEnum = {
   specialty_id: 'specialty_id',
   name: 'name',
-  description: 'description'
+  description: 'description',
+  department_id: 'department_id'
 } as const
 
 export type SpecialtyScalarFieldEnum = (typeof SpecialtyScalarFieldEnum)[keyof typeof SpecialtyScalarFieldEnum]
@@ -1562,6 +1563,14 @@ export const DepartmentOrderByRelevanceFieldEnum = {
 } as const
 
 export type DepartmentOrderByRelevanceFieldEnum = (typeof DepartmentOrderByRelevanceFieldEnum)[keyof typeof DepartmentOrderByRelevanceFieldEnum]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 export const SpecialtyOrderByRelevanceFieldEnum = {

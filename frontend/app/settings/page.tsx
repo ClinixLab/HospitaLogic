@@ -13,6 +13,9 @@ export default function SettingsPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadingDeps, setLoadingDeps] = useState(false);
+  const [loadingSpecs, setLoadingSpecs] = useState(false);
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [okMsg, setOkMsg] = useState<string | null>(null);
 
@@ -24,7 +27,7 @@ export default function SettingsPage() {
   const [pPhone, setPPhone] = useState("");
 
   const [piiEnabled, setPiiEnabled] = useState(false);
-  const [piiDOB, setPiiDOB] = useState("");     // YYYY-MM-DD
+  const [piiDOB, setPiiDOB] = useState(""); // YYYY-MM-DD
   const [piiAddress, setPiiAddress] = useState("");
 
   // doctor fields
@@ -40,8 +43,11 @@ export default function SettingsPage() {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
 
+  // โหลดโปรไฟล์ + (ถ้า DOCTOR) โหลด departments
   useEffect(() => {
     if (status !== "authenticated") return;
+
+    let cancelled = false;
 
     (async () => {
       setLoading(true);
@@ -49,51 +55,132 @@ export default function SettingsPage() {
       setOkMsg(null);
 
       try {
-        const res = await fetch("/api/profile", { credentials: "include" });
-        const data = await res.json();
+        const res = await fetch("/api/profile", {
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        if (res.status === 401) {
+          router.push("/login");
+          return;
+        }
+
+        const data = await res.json().catch(() => ({}));
 
         if (!res.ok) {
-          setErrorMsg(data?.message ?? "โหลดข้อมูลไม่สำเร็จ");
+          if (!cancelled) setErrorMsg(data?.message ?? `โหลดข้อมูลไม่สำเร็จ (${res.status})`);
           return;
         }
 
         const r = data.role as "PATIENT" | "DOCTOR";
-        setRole(r);
+        if (!cancelled) setRole(r);
 
         if (r === "PATIENT") {
-          const profile = data.profile;
-          setPName(profile?.name ?? "");
-          setPGender(profile?.gender ?? "");
-          setPPhone(profile?.phone ?? "");
+          const profile = data.profile ?? {};
+          if (!cancelled) {
+            setPName(profile?.name ?? "");
+            setPGender(profile?.gender ?? "");
+            setPPhone(profile?.phone ?? "");
 
-          const pii = profile?.pii ?? null;
-          setPiiEnabled(!!pii);
-          setPiiDOB(pii?.DOB ? String(pii.DOB).slice(0, 10) : "");
-          setPiiAddress(pii?.address ?? "");
-        } else {
-          const profile = data.profile;
+            const pii = profile?.pii ?? null;
+            setPiiEnabled(!!pii);
+            setPiiDOB(pii?.DOB ? String(pii.DOB).slice(0, 10) : "");
+            setPiiAddress(pii?.address ?? "");
+          }
+          return;
+        }
+
+        // DOCTOR
+        const profile = data.profile ?? {};
+        if (!cancelled) {
           setDName(profile?.name ?? "");
           setDPhone(profile?.phone ?? "");
           setDepartmentId(profile?.department_id ?? "");
           setSpecialtyId(profile?.specialty_id ?? "");
-
-          // โหลด dropdown doctor
-          const [dRes, sRes] = await Promise.all([
-            fetch("/api/departments", { credentials: "include" }),
-            fetch("/api/specialties", { credentials: "include" }),
-          ]);
-          const dJson = await dRes.json();
-          const sJson = await sRes.json();
-          setDepartments(dJson.departments ?? []);
-          setSpecialties(sJson.specialties ?? []);
         }
+
+        // โหลด departments
+        setLoadingDeps(true);
+        const dRes = await fetch("/api/departments", {
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        const dJson = await dRes.json().catch(() => ({}));
+        if (!dRes.ok) {
+          if (!cancelled) {
+            setErrorMsg(dJson?.message ?? `โหลด departments ไม่สำเร็จ (${dRes.status})`);
+          }
+          return;
+        }
+
+        if (!cancelled) setDepartments(dJson.departments ?? []);
       } catch {
-        setErrorMsg("โหลดข้อมูลไม่สำเร็จ");
+        if (!cancelled) setErrorMsg("โหลดข้อมูลไม่สำเร็จ (network/error)");
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoadingDeps(false);
+          setLoading(false);
+        }
       }
     })();
-  }, [status]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [status, router]);
+
+  // โหลด specialties ตาม department ที่เลือก (DOCTOR เท่านั้น)
+  useEffect(() => {
+    if (role !== "DOCTOR") return;
+
+    // ยังไม่เลือกแผนก → เคลียร์ list
+    if (departmentId === "") {
+      setSpecialties([]);
+      setSpecialtyId("");
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      setLoadingSpecs(true);
+      setErrorMsg(null);
+
+      try {
+        const res = await fetch(`/api/specialties?department_id=${departmentId}`, {
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          if (!cancelled) setErrorMsg(data?.message ?? `โหลด specialties ไม่สำเร็จ (${res.status})`);
+          return;
+        }
+
+        const list: Specialty[] = data.specialties ?? [];
+        if (!cancelled) {
+          setSpecialties(list);
+
+          // ถ้า specialty ที่เลือกอยู่ไม่ตรงกับ list ใหม่ → reset
+          setSpecialtyId((prev) => {
+            if (prev === "") return "";
+            return list.some((s) => s.specialty_id === Number(prev)) ? prev : "";
+          });
+        }
+      } catch {
+        if (!cancelled) setErrorMsg("โหลด specialties ไม่สำเร็จ (network/error)");
+      } finally {
+        if (!cancelled) setLoadingSpecs(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role, departmentId]);
 
   const canSave = useMemo(() => {
     if (!role) return false;
@@ -113,7 +200,19 @@ export default function SettingsPage() {
     }
 
     return false;
-  }, [role, pName, pGender, pPhone, piiEnabled, piiDOB, piiAddress, dName, dPhone, departmentId, specialtyId]);
+  }, [
+    role,
+    pName,
+    pGender,
+    pPhone,
+    piiEnabled,
+    piiDOB,
+    piiAddress,
+    dName,
+    dPhone,
+    departmentId,
+    specialtyId,
+  ]);
 
   async function onSave() {
     if (!canSave || saving) return;
@@ -154,13 +253,13 @@ export default function SettingsPage() {
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setErrorMsg(data?.message ?? "บันทึกไม่สำเร็จ");
+        setErrorMsg(data?.message ?? `บันทึกไม่สำเร็จ (${res.status})`);
         return;
       }
 
       setOkMsg("บันทึกสำเร็จ");
     } catch {
-      setErrorMsg("บันทึกไม่สำเร็จ");
+      setErrorMsg("บันทึกไม่สำเร็จ (network/error)");
     } finally {
       setSaving(false);
     }
@@ -299,10 +398,15 @@ export default function SettingsPage() {
                   <label className="text-sm font-semibold">Department</label>
                   <select
                     value={departmentId}
-                    onChange={(e) => setDepartmentId(e.target.value ? Number(e.target.value) : "")}
+                    onChange={(e) => {
+                      const v = e.target.value ? Number(e.target.value) : "";
+                      setDepartmentId(v);
+                      setSpecialtyId(""); // ✅ เปลี่ยนแผนก -> reset สาขา
+                    }}
                     className="mt-2 w-full rounded-xl border px-3 py-2 outline-none focus:ring"
+                    disabled={loadingDeps}
                   >
-                    <option value="">— เลือก —</option>
+                    <option value="">{loadingDeps ? "กำลังโหลด..." : "— เลือก —"}</option>
                     {departments.map((d) => (
                       <option key={d.department_id} value={d.department_id}>
                         {d.name}
@@ -317,8 +421,15 @@ export default function SettingsPage() {
                     value={specialtyId}
                     onChange={(e) => setSpecialtyId(e.target.value ? Number(e.target.value) : "")}
                     className="mt-2 w-full rounded-xl border px-3 py-2 outline-none focus:ring"
+                    disabled={departmentId === "" || loadingSpecs}
                   >
-                    <option value="">— เลือก —</option>
+                    <option value="">
+                      {departmentId === ""
+                        ? "เลือก Department ก่อน"
+                        : loadingSpecs
+                        ? "กำลังโหลด..."
+                        : "— เลือก —"}
+                    </option>
                     {specialties.map((s) => (
                       <option key={s.specialty_id} value={s.specialty_id}>
                         {s.name}
@@ -329,7 +440,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="text-xs text-gray-500">
-                หมายเหตุ: ระบบจะ validate ว่า department/specialty มีอยู่จริงก่อนบันทึก
+                ระบบจะดึง Specialty เฉพาะของ Department ที่เลือก (ผ่าน /api/specialties?department_id=...)
               </div>
             </div>
           )}

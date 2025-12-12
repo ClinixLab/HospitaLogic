@@ -201,6 +201,7 @@ export type DepartmentWhereInput = {
   name?: Prisma.StringFilter<"Department"> | string
   location?: Prisma.StringFilter<"Department"> | string
   doctors?: Prisma.DoctorListRelationFilter
+  specialties?: Prisma.SpecialtyListRelationFilter
 }
 
 export type DepartmentOrderByWithRelationInput = {
@@ -208,6 +209,7 @@ export type DepartmentOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   location?: Prisma.SortOrder
   doctors?: Prisma.DoctorOrderByRelationAggregateInput
+  specialties?: Prisma.SpecialtyOrderByRelationAggregateInput
   _relevance?: Prisma.DepartmentOrderByRelevanceInput
 }
 
@@ -219,6 +221,7 @@ export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Department"> | string
   location?: Prisma.StringFilter<"Department"> | string
   doctors?: Prisma.DoctorListRelationFilter
+  specialties?: Prisma.SpecialtyListRelationFilter
 }, "department_id">
 
 export type DepartmentOrderByWithAggregationInput = {
@@ -245,6 +248,7 @@ export type DepartmentCreateInput = {
   name: string
   location: string
   doctors?: Prisma.DoctorCreateNestedManyWithoutDepartmentInput
+  specialties?: Prisma.SpecialtyCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateInput = {
@@ -252,12 +256,14 @@ export type DepartmentUncheckedCreateInput = {
   name: string
   location: string
   doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutDepartmentInput
+  specialties?: Prisma.SpecialtyUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   doctors?: Prisma.DoctorUpdateManyWithoutDepartmentNestedInput
+  specialties?: Prisma.SpecialtyUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateInput = {
@@ -265,6 +271,7 @@ export type DepartmentUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
   doctors?: Prisma.DoctorUncheckedUpdateManyWithoutDepartmentNestedInput
+  specialties?: Prisma.SpecialtyUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateManyInput = {
@@ -316,9 +323,30 @@ export type DepartmentSumOrderByAggregateInput = {
   department_id?: Prisma.SortOrder
 }
 
+export type DepartmentNullableScalarRelationFilter = {
+  is?: Prisma.DepartmentWhereInput | null
+  isNot?: Prisma.DepartmentWhereInput | null
+}
+
 export type DepartmentScalarRelationFilter = {
   is?: Prisma.DepartmentWhereInput
   isNot?: Prisma.DepartmentWhereInput
+}
+
+export type DepartmentCreateNestedOneWithoutSpecialtiesInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutSpecialtiesInput, Prisma.DepartmentUncheckedCreateWithoutSpecialtiesInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutSpecialtiesInput
+  connect?: Prisma.DepartmentWhereUniqueInput
+}
+
+export type DepartmentUpdateOneWithoutSpecialtiesNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutSpecialtiesInput, Prisma.DepartmentUncheckedCreateWithoutSpecialtiesInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutSpecialtiesInput
+  upsert?: Prisma.DepartmentUpsertWithoutSpecialtiesInput
+  disconnect?: Prisma.DepartmentWhereInput | boolean
+  delete?: Prisma.DepartmentWhereInput | boolean
+  connect?: Prisma.DepartmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutSpecialtiesInput, Prisma.DepartmentUpdateWithoutSpecialtiesInput>, Prisma.DepartmentUncheckedUpdateWithoutSpecialtiesInput>
 }
 
 export type DepartmentCreateNestedOneWithoutDoctorsInput = {
@@ -335,15 +363,59 @@ export type DepartmentUpdateOneRequiredWithoutDoctorsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutDoctorsInput, Prisma.DepartmentUpdateWithoutDoctorsInput>, Prisma.DepartmentUncheckedUpdateWithoutDoctorsInput>
 }
 
+export type DepartmentCreateWithoutSpecialtiesInput = {
+  name: string
+  location: string
+  doctors?: Prisma.DoctorCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentUncheckedCreateWithoutSpecialtiesInput = {
+  department_id?: number
+  name: string
+  location: string
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentCreateOrConnectWithoutSpecialtiesInput = {
+  where: Prisma.DepartmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutSpecialtiesInput, Prisma.DepartmentUncheckedCreateWithoutSpecialtiesInput>
+}
+
+export type DepartmentUpsertWithoutSpecialtiesInput = {
+  update: Prisma.XOR<Prisma.DepartmentUpdateWithoutSpecialtiesInput, Prisma.DepartmentUncheckedUpdateWithoutSpecialtiesInput>
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutSpecialtiesInput, Prisma.DepartmentUncheckedCreateWithoutSpecialtiesInput>
+  where?: Prisma.DepartmentWhereInput
+}
+
+export type DepartmentUpdateToOneWithWhereWithoutSpecialtiesInput = {
+  where?: Prisma.DepartmentWhereInput
+  data: Prisma.XOR<Prisma.DepartmentUpdateWithoutSpecialtiesInput, Prisma.DepartmentUncheckedUpdateWithoutSpecialtiesInput>
+}
+
+export type DepartmentUpdateWithoutSpecialtiesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  doctors?: Prisma.DoctorUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentUncheckedUpdateWithoutSpecialtiesInput = {
+  department_id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutDepartmentNestedInput
+}
+
 export type DepartmentCreateWithoutDoctorsInput = {
   name: string
   location: string
+  specialties?: Prisma.SpecialtyCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutDoctorsInput = {
   department_id?: number
   name: string
   location: string
+  specialties?: Prisma.SpecialtyUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutDoctorsInput = {
@@ -365,12 +437,14 @@ export type DepartmentUpdateToOneWithWhereWithoutDoctorsInput = {
 export type DepartmentUpdateWithoutDoctorsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.SpecialtyUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutDoctorsInput = {
   department_id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.StringFieldUpdateOperationsInput | string
+  specialties?: Prisma.SpecialtyUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 
@@ -380,10 +454,12 @@ export type DepartmentUncheckedUpdateWithoutDoctorsInput = {
 
 export type DepartmentCountOutputType = {
   doctors: number
+  specialties: number
 }
 
 export type DepartmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   doctors?: boolean | DepartmentCountOutputTypeCountDoctorsArgs
+  specialties?: boolean | DepartmentCountOutputTypeCountSpecialtiesArgs
 }
 
 /**
@@ -403,12 +479,20 @@ export type DepartmentCountOutputTypeCountDoctorsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.DoctorWhereInput
 }
 
+/**
+ * DepartmentCountOutputType without action
+ */
+export type DepartmentCountOutputTypeCountSpecialtiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SpecialtyWhereInput
+}
+
 
 export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   department_id?: boolean
   name?: boolean
   location?: boolean
   doctors?: boolean | Prisma.Department$doctorsArgs<ExtArgs>
+  specialties?: boolean | Prisma.Department$specialtiesArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["department"]>
 
@@ -423,6 +507,7 @@ export type DepartmentSelectScalar = {
 export type DepartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"department_id" | "name" | "location", ExtArgs["result"]["department"]>
 export type DepartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   doctors?: boolean | Prisma.Department$doctorsArgs<ExtArgs>
+  specialties?: boolean | Prisma.Department$specialtiesArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -430,6 +515,7 @@ export type $DepartmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "Department"
   objects: {
     doctors: Prisma.$DoctorPayload<ExtArgs>[]
+    specialties: Prisma.$SpecialtyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     department_id: number
@@ -776,6 +862,7 @@ readonly fields: DepartmentFieldRefs;
 export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   doctors<T extends Prisma.Department$doctorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$doctorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  specialties<T extends Prisma.Department$specialtiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$specialtiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpecialtyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1172,6 +1259,30 @@ export type Department$doctorsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.DoctorScalarFieldEnum | Prisma.DoctorScalarFieldEnum[]
+}
+
+/**
+ * Department.specialties
+ */
+export type Department$specialtiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Specialty
+   */
+  select?: Prisma.SpecialtySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Specialty
+   */
+  omit?: Prisma.SpecialtyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SpecialtyInclude<ExtArgs> | null
+  where?: Prisma.SpecialtyWhereInput
+  orderBy?: Prisma.SpecialtyOrderByWithRelationInput | Prisma.SpecialtyOrderByWithRelationInput[]
+  cursor?: Prisma.SpecialtyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SpecialtyScalarFieldEnum | Prisma.SpecialtyScalarFieldEnum[]
 }
 
 /**

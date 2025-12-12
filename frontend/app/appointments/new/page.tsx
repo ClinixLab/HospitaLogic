@@ -3,14 +3,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Specialty = { specialty_id: number; name: string; description: string };
+type Department = { department_id: number; name: string; location: string };
+
 type Doctor = {
-  doctor_id: number;
+  doctor_id: string; // UUID
   name: string;
   phone: string;
   department?: { department_id: number; name: string };
   specialty?: { specialty_id: number; name: string };
 };
+
 type Slot = { time: string };
 
 function pad2(n: number) {
@@ -33,52 +35,52 @@ export default function NewAppointmentPage() {
   const router = useRouter();
 
   const [symptoms, setSymptoms] = useState("");
-  const [specialties, setSpecialties] = useState<Specialty[]>([]);
+
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
 
-  const [specialtyId, setSpecialtyId] = useState<number | "">("");
-  const [doctorId, setDoctorId] = useState<number | "">("");
+  const [departmentId, setDepartmentId] = useState<number | "">("");
+  const [doctorId, setDoctorId] = useState<string>("");
+
   const [date, setDate] = useState(""); // YYYY-MM-DD
   const [time, setTime] = useState(""); // HH:mm
 
-  const [loadingSpec, setLoadingSpec] = useState(false);
+  const [loadingDept, setLoadingDept] = useState(false);
   const [loadingDoc, setLoadingDoc] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const canSubmit = useMemo(() => {
-    return (
-      symptoms.trim().length > 0 &&
-      specialtyId !== "" &&
-      doctorId !== "" &&
-      date &&
-      time &&
-      !submitting
-    );
-  }, [symptoms, specialtyId, doctorId, date, time, submitting]);
+  const selectedDoctor = useMemo(
+    () => (doctorId ? doctors.find((d) => d.doctor_id === doctorId) ?? null : null),
+    [doctorId, doctors]
+  );
 
-  // load specialties
+  const canSubmit = useMemo(() => {
+    return symptoms.trim().length > 0 && departmentId !== "" && doctorId !== "" && date && time && !submitting;
+  }, [symptoms, departmentId, doctorId, date, time, submitting]);
+
+  // load departments
   useEffect(() => {
     (async () => {
-      setLoadingSpec(true);
+      setLoadingDept(true);
       setErrorMsg(null);
       try {
-        const res = await fetch("/api/specialties", { credentials: "include" });
+        const res = await fetch("/api/departments", { credentials: "include" });
         if (res.status === 401) return router.push("/login");
         const data = await res.json();
-        setSpecialties(data.specialties ?? []);
+        setDepartments(data.departments ?? []);
       } catch {
-        setErrorMsg("โหลดรายการ Specialty ไม่สำเร็จ");
+        setErrorMsg("โหลดรายการ Department ไม่สำเร็จ");
       } finally {
-        setLoadingSpec(false);
+        setLoadingDept(false);
       }
     })();
   }, [router]);
 
-  // load doctors by specialty
+  // load doctors by department
   useEffect(() => {
     setDoctors([]);
     setDoctorId("");
@@ -86,15 +88,13 @@ export default function NewAppointmentPage() {
     setTime("");
     setSlots([]);
 
-    if (specialtyId === "") return;
+    if (departmentId === "") return;
 
     (async () => {
       setLoadingDoc(true);
       setErrorMsg(null);
       try {
-        const res = await fetch(`/api/doctors?specialty_id=${specialtyId}`, {
-          credentials: "include",
-        });
+        const res = await fetch(`/api/doctors?department_id=${departmentId}`, { credentials: "include" });
         if (res.status === 401) return router.push("/login");
         const data = await res.json();
         setDoctors(data.doctors ?? []);
@@ -104,7 +104,7 @@ export default function NewAppointmentPage() {
         setLoadingDoc(false);
       }
     })();
-  }, [specialtyId, router]);
+  }, [departmentId, router]);
 
   // load slots when doctor + date ready
   useEffect(() => {
@@ -117,28 +117,23 @@ export default function NewAppointmentPage() {
       setLoadingSlots(true);
       setErrorMsg(null);
       try {
-        const res = await fetch(
-          `/api/appointments/slots?doctor_id=${doctorId}&date=${date}`,
-          { credentials: "include" }
-        );
+        const res = await fetch(`/api/appointments/slots?doctor_id=${doctorId}&date=${date}`, {
+          credentials: "include",
+        });
         if (res.status === 401) return router.push("/login");
-
         const data = await res.json();
+
         const fetched: Slot[] = data.slots ?? [];
 
-        // “เหมือนจองตั๋วหนัง” -> ปิดเวลาที่เลยแล้วตามเวลาเครื่องผู้ใช้
         const today = todayYMDLocal();
         const now = new Date();
         const minMinsToday = nextHalfHourMinutes(now);
 
         let filtered = fetched;
-
         if (date < today) filtered = [];
         if (date === today) filtered = fetched.filter((s) => toMinutes(s.time) >= minMinsToday);
 
         setSlots(filtered);
-
-        // ถ้า slot ที่เลือกโดนตัดออก ให้ reset
         setTime((prev) => (prev && filtered.some((s) => s.time === prev) ? prev : ""));
       } catch {
         setErrorMsg("โหลดเวลาว่างไม่สำเร็จ");
@@ -162,16 +157,18 @@ export default function NewAppointmentPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           symptoms,
-          specialty_id: specialtyId,
           doctor_id: doctorId,
           date,
           time,
+          // ✅ ไม่ต้องส่ง specialty_id แล้ว “แนะนำให้แก้ POST /api/appointments ให้ไม่ require specialty_id”
+          // ถ้าคุณยัง require อยู่: ส่งเพิ่มได้แบบนี้
+          // specialty_id: selectedDoctor?.specialty?.specialty_id,
         }),
       });
 
       if (res.status === 401) return router.push("/login");
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setErrorMsg(data?.message ?? "ส่งคำขอไม่สำเร็จ");
         return;
@@ -185,18 +182,17 @@ export default function NewAppointmentPage() {
     }
   }
 
-  const selectedSpecialtyName =
-    specialtyId === "" ? "—" : specialties.find((s) => s.specialty_id === specialtyId)?.name ?? "—";
-  const selectedDoctorName =
-    doctorId === "" ? "—" : doctors.find((d) => d.doctor_id === doctorId)?.name ?? "—";
+  const selectedDepartmentName =
+    departmentId === "" ? "—" : departments.find((d) => d.department_id === departmentId)?.name ?? "—";
+
+  const selectedDoctorName = selectedDoctor?.name ?? "—";
+  const selectedDoctorSpec = selectedDoctor?.specialty?.name ?? "—";
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="mb-6">
         <h1 className="text-3xl font-bold tracking-tight">จองนัดพบแพทย์</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          เลือกสาขา → เลือกหมอ → เลือกวัน → เลือกช่วงเวลา (ครึ่งชั่วโมง)
-        </p>
+        <p className="mt-1 text-sm text-gray-500">เลือก Department → เลือกหมอ (ชื่อ+Specialty) → เลือกวัน → เลือกเวลา</p>
       </div>
 
       {errorMsg && (
@@ -206,7 +202,6 @@ export default function NewAppointmentPage() {
       )}
 
       <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-3">
-        {/* Left */}
         <div className="lg:col-span-2 rounded-2xl border bg-white p-5 shadow-sm">
           <div className="space-y-5">
             <div>
@@ -218,49 +213,46 @@ export default function NewAppointmentPage() {
                 placeholder="เช่น ปวดท้องด้านขวา คลื่นไส้ มีไข้..."
                 className="mt-2 w-full rounded-xl border px-3 py-2 outline-none focus:ring"
               />
-              <p className="mt-1 text-xs text-gray-500">
-                แนะนำให้พิมพ์ละเอียด: เริ่มเมื่อไหร่, ปวดระดับไหน, มีไข้/อาเจียน/ถ่ายเหลวไหม ฯลฯ
-              </p>
             </div>
 
             <div>
-              <label className="text-sm font-semibold">1) เลือก Specialty</label>
+              <label className="text-sm font-semibold">1) เลือก Department</label>
               <select
-                value={specialtyId}
-                onChange={(e) => setSpecialtyId(e.target.value ? Number(e.target.value) : "")}
-                disabled={loadingSpec}
+                value={departmentId}
+                onChange={(e) => setDepartmentId(e.target.value ? Number(e.target.value) : "")}
+                disabled={loadingDept}
                 className="mt-2 w-full rounded-xl border px-3 py-2 outline-none focus:ring disabled:bg-gray-50"
               >
-                <option value="">{loadingSpec ? "กำลังโหลด..." : "— เลือก —"}</option>
-                {specialties.map((s) => (
-                  <option key={s.specialty_id} value={s.specialty_id}>
-                    {s.name}
+                <option value="">{loadingDept ? "กำลังโหลด..." : "— เลือก —"}</option>
+                {departments.map((d) => (
+                  <option key={d.department_id} value={d.department_id}>
+                    {d.name}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="text-sm font-semibold">2) เลือกหมอ</label>
+              <label className="text-sm font-semibold">2) เลือกหมอ (ชื่อ + Specialty)</label>
               <select
                 value={doctorId}
-                onChange={(e) => setDoctorId(e.target.value ? Number(e.target.value) : "")}
-                disabled={specialtyId === "" || loadingDoc}
+                onChange={(e) => setDoctorId(e.target.value)}
+                disabled={departmentId === "" || loadingDoc}
                 className="mt-2 w-full rounded-xl border px-3 py-2 outline-none focus:ring disabled:bg-gray-50"
               >
                 <option value="">
-                  {specialtyId === ""
-                    ? "เลือก Specialty ก่อน"
+                  {departmentId === ""
+                    ? "เลือก Department ก่อน"
                     : loadingDoc
                     ? "กำลังโหลดรายชื่อหมอ..."
                     : doctors.length === 0
-                    ? "ไม่มีหมอในสาขานี้"
+                    ? "ไม่มีหมอในแผนกนี้"
                     : "— เลือก —"}
                 </option>
+
                 {doctors.map((d) => (
                   <option key={d.doctor_id} value={d.doctor_id}>
-                    {d.name}
-                    {d.department?.name ? ` • ${d.department.name}` : ""}
+                    {d.name} {d.specialty?.name ? `• ${d.specialty.name}` : ""}
                   </option>
                 ))}
               </select>
@@ -285,9 +277,7 @@ export default function NewAppointmentPage() {
                   กรุณาเลือก “หมอ” และ “วันที่” ก่อน เพื่อดูเวลาว่าง
                 </div>
               ) : loadingSlots ? (
-                <div className="mt-2 rounded-xl border bg-gray-50 px-3 py-3 text-sm text-gray-600">
-                  กำลังโหลดเวลาว่าง...
-                </div>
+                <div className="mt-2 rounded-xl border bg-gray-50 px-3 py-3 text-sm text-gray-600">กำลังโหลดเวลาว่าง...</div>
               ) : slots.length === 0 ? (
                 <div className="mt-2 rounded-xl border bg-gray-50 px-3 py-3 text-sm text-gray-600">
                   ไม่มีเวลาว่างในวันนี้ (หรือเวลาที่เหลือเลยเวลาปัจจุบันแล้ว)
@@ -302,8 +292,7 @@ export default function NewAppointmentPage() {
                         type="button"
                         onClick={() => setTime(s.time)}
                         className={[
-                          "rounded-xl border px-3 py-2 text-sm font-semibold",
-                          "hover:bg-gray-50",
+                          "rounded-xl border px-3 py-2 text-sm font-semibold hover:bg-gray-50",
                           active ? "bg-black text-white border-black" : "bg-white",
                         ].join(" ")}
                       >
@@ -313,10 +302,6 @@ export default function NewAppointmentPage() {
                   })}
                 </div>
               )}
-
-              <p className="mt-1 text-xs text-gray-500">
-                แสดงเฉพาะเวลาที่จองได้ของหมอคนนี้ + ปิดเวลาที่เลยแล้วตาม “เวลาเครื่องผู้ใช้”
-              </p>
             </div>
 
             <button
@@ -329,30 +314,27 @@ export default function NewAppointmentPage() {
           </div>
         </div>
 
-        {/* Right */}
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold">สรุปการจอง</h2>
 
           <div className="mt-4 space-y-3 text-sm">
             <div className="flex items-start justify-between gap-3">
-              <span className="text-gray-500">Specialty</span>
-              <span className="font-semibold">{selectedSpecialtyName}</span>
+              <span className="text-gray-500">Department</span>
+              <span className="font-semibold">{selectedDepartmentName}</span>
             </div>
-
             <div className="flex items-start justify-between gap-3">
               <span className="text-gray-500">แพทย์</span>
               <span className="font-semibold">{selectedDoctorName}</span>
             </div>
-
+            <div className="flex items-start justify-between gap-3">
+              <span className="text-gray-500">Specialty</span>
+              <span className="font-semibold">{selectedDoctorSpec}</span>
+            </div>
             <div className="flex items-start justify-between gap-3">
               <span className="text-gray-500">วันที่/เวลา</span>
               <span className="font-semibold">
                 {date ? date : "—"} {time ? time : ""}
               </span>
-            </div>
-
-            <div className="rounded-xl bg-gray-50 p-3 text-xs text-gray-600">
-              กันเวลาทับกันจริงด้วย DB unique + POST จับ P2002 (Timeslot already booked)
             </div>
           </div>
         </div>
