@@ -28,30 +28,26 @@ export type AggregateTreatment = {
 
 export type TreatmentAvgAggregateOutputType = {
   treatment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
   diagnosis_id: number | null
 }
 
 export type TreatmentSumAggregateOutputType = {
   treatment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
   diagnosis_id: number | null
 }
 
 export type TreatmentMinAggregateOutputType = {
   treatment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
+  patient_id: string | null
+  doctor_id: string | null
   diagnosis_id: number | null
   treatment_date: Date | null
 }
 
 export type TreatmentMaxAggregateOutputType = {
   treatment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
+  patient_id: string | null
+  doctor_id: string | null
   diagnosis_id: number | null
   treatment_date: Date | null
 }
@@ -68,15 +64,11 @@ export type TreatmentCountAggregateOutputType = {
 
 export type TreatmentAvgAggregateInputType = {
   treatment_id?: true
-  patient_id?: true
-  doctor_id?: true
   diagnosis_id?: true
 }
 
 export type TreatmentSumAggregateInputType = {
   treatment_id?: true
-  patient_id?: true
-  doctor_id?: true
   diagnosis_id?: true
 }
 
@@ -193,8 +185,8 @@ export type TreatmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type TreatmentGroupByOutputType = {
   treatment_id: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   diagnosis_id: number
   treatment_date: Date
   _count: TreatmentCountAggregateOutputType | null
@@ -224,8 +216,8 @@ export type TreatmentWhereInput = {
   OR?: Prisma.TreatmentWhereInput[]
   NOT?: Prisma.TreatmentWhereInput | Prisma.TreatmentWhereInput[]
   treatment_id?: Prisma.IntFilter<"Treatment"> | number
-  patient_id?: Prisma.IntFilter<"Treatment"> | number
-  doctor_id?: Prisma.IntFilter<"Treatment"> | number
+  patient_id?: Prisma.StringFilter<"Treatment"> | string
+  doctor_id?: Prisma.StringFilter<"Treatment"> | string
   diagnosis_id?: Prisma.IntFilter<"Treatment"> | number
   treatment_date?: Prisma.DateTimeFilter<"Treatment"> | Date | string
   medicines?: Prisma.TreatmentMedicineListRelationFilter
@@ -246,6 +238,7 @@ export type TreatmentOrderByWithRelationInput = {
   patient?: Prisma.PatientOrderByWithRelationInput
   doctor?: Prisma.DoctorOrderByWithRelationInput
   diagnosis?: Prisma.DiagnosisOrderByWithRelationInput
+  _relevance?: Prisma.TreatmentOrderByRelevanceInput
 }
 
 export type TreatmentWhereUniqueInput = Prisma.AtLeast<{
@@ -253,8 +246,8 @@ export type TreatmentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.TreatmentWhereInput | Prisma.TreatmentWhereInput[]
   OR?: Prisma.TreatmentWhereInput[]
   NOT?: Prisma.TreatmentWhereInput | Prisma.TreatmentWhereInput[]
-  patient_id?: Prisma.IntFilter<"Treatment"> | number
-  doctor_id?: Prisma.IntFilter<"Treatment"> | number
+  patient_id?: Prisma.StringFilter<"Treatment"> | string
+  doctor_id?: Prisma.StringFilter<"Treatment"> | string
   diagnosis_id?: Prisma.IntFilter<"Treatment"> | number
   treatment_date?: Prisma.DateTimeFilter<"Treatment"> | Date | string
   medicines?: Prisma.TreatmentMedicineListRelationFilter
@@ -282,8 +275,8 @@ export type TreatmentScalarWhereWithAggregatesInput = {
   OR?: Prisma.TreatmentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TreatmentScalarWhereWithAggregatesInput | Prisma.TreatmentScalarWhereWithAggregatesInput[]
   treatment_id?: Prisma.IntWithAggregatesFilter<"Treatment"> | number
-  patient_id?: Prisma.IntWithAggregatesFilter<"Treatment"> | number
-  doctor_id?: Prisma.IntWithAggregatesFilter<"Treatment"> | number
+  patient_id?: Prisma.StringWithAggregatesFilter<"Treatment"> | string
+  doctor_id?: Prisma.StringWithAggregatesFilter<"Treatment"> | string
   diagnosis_id?: Prisma.IntWithAggregatesFilter<"Treatment"> | number
   treatment_date?: Prisma.DateTimeWithAggregatesFilter<"Treatment"> | Date | string
 }
@@ -299,8 +292,8 @@ export type TreatmentCreateInput = {
 
 export type TreatmentUncheckedCreateInput = {
   treatment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   diagnosis_id: number
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
@@ -318,8 +311,8 @@ export type TreatmentUpdateInput = {
 
 export type TreatmentUncheckedUpdateInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
@@ -328,8 +321,8 @@ export type TreatmentUncheckedUpdateInput = {
 
 export type TreatmentCreateManyInput = {
   treatment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   diagnosis_id: number
   treatment_date: Date | string
 }
@@ -340,8 +333,8 @@ export type TreatmentUpdateManyMutationInput = {
 
 export type TreatmentUncheckedUpdateManyInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -356,6 +349,12 @@ export type TreatmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type TreatmentOrderByRelevanceInput = {
+  fields: Prisma.TreatmentOrderByRelevanceFieldEnum | Prisma.TreatmentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type TreatmentCountOrderByAggregateInput = {
   treatment_id?: Prisma.SortOrder
   patient_id?: Prisma.SortOrder
@@ -366,8 +365,6 @@ export type TreatmentCountOrderByAggregateInput = {
 
 export type TreatmentAvgOrderByAggregateInput = {
   treatment_id?: Prisma.SortOrder
-  patient_id?: Prisma.SortOrder
-  doctor_id?: Prisma.SortOrder
   diagnosis_id?: Prisma.SortOrder
 }
 
@@ -389,8 +386,6 @@ export type TreatmentMinOrderByAggregateInput = {
 
 export type TreatmentSumOrderByAggregateInput = {
   treatment_id?: Prisma.SortOrder
-  patient_id?: Prisma.SortOrder
-  doctor_id?: Prisma.SortOrder
   diagnosis_id?: Prisma.SortOrder
 }
 
@@ -563,7 +558,7 @@ export type TreatmentCreateWithoutPatientInput = {
 
 export type TreatmentUncheckedCreateWithoutPatientInput = {
   treatment_id?: number
-  doctor_id: number
+  doctor_id: string
   diagnosis_id: number
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
@@ -601,8 +596,8 @@ export type TreatmentScalarWhereInput = {
   OR?: Prisma.TreatmentScalarWhereInput[]
   NOT?: Prisma.TreatmentScalarWhereInput | Prisma.TreatmentScalarWhereInput[]
   treatment_id?: Prisma.IntFilter<"Treatment"> | number
-  patient_id?: Prisma.IntFilter<"Treatment"> | number
-  doctor_id?: Prisma.IntFilter<"Treatment"> | number
+  patient_id?: Prisma.StringFilter<"Treatment"> | string
+  doctor_id?: Prisma.StringFilter<"Treatment"> | string
   diagnosis_id?: Prisma.IntFilter<"Treatment"> | number
   treatment_date?: Prisma.DateTimeFilter<"Treatment"> | Date | string
 }
@@ -617,8 +612,8 @@ export type TreatmentCreateWithoutDiagnosisInput = {
 
 export type TreatmentUncheckedCreateWithoutDiagnosisInput = {
   treatment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
   billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
@@ -660,7 +655,7 @@ export type TreatmentCreateWithoutDoctorInput = {
 
 export type TreatmentUncheckedCreateWithoutDoctorInput = {
   treatment_id?: number
-  patient_id: number
+  patient_id: string
   diagnosis_id: number
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
@@ -703,8 +698,8 @@ export type TreatmentCreateWithoutMedicinesInput = {
 
 export type TreatmentUncheckedCreateWithoutMedicinesInput = {
   treatment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   diagnosis_id: number
   treatment_date: Date | string
   billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
@@ -736,8 +731,8 @@ export type TreatmentUpdateWithoutMedicinesInput = {
 
 export type TreatmentUncheckedUpdateWithoutMedicinesInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
@@ -753,8 +748,8 @@ export type TreatmentCreateWithoutBillTreatmentsInput = {
 
 export type TreatmentUncheckedCreateWithoutBillTreatmentsInput = {
   treatment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   diagnosis_id: number
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
@@ -786,8 +781,8 @@ export type TreatmentUpdateWithoutBillTreatmentsInput = {
 
 export type TreatmentUncheckedUpdateWithoutBillTreatmentsInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
@@ -795,7 +790,7 @@ export type TreatmentUncheckedUpdateWithoutBillTreatmentsInput = {
 
 export type TreatmentCreateManyPatientInput = {
   treatment_id?: number
-  doctor_id: number
+  doctor_id: string
   diagnosis_id: number
   treatment_date: Date | string
 }
@@ -810,7 +805,7 @@ export type TreatmentUpdateWithoutPatientInput = {
 
 export type TreatmentUncheckedUpdateWithoutPatientInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
@@ -819,15 +814,15 @@ export type TreatmentUncheckedUpdateWithoutPatientInput = {
 
 export type TreatmentUncheckedUpdateManyWithoutPatientInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TreatmentCreateManyDiagnosisInput = {
   treatment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   treatment_date: Date | string
 }
 
@@ -841,8 +836,8 @@ export type TreatmentUpdateWithoutDiagnosisInput = {
 
 export type TreatmentUncheckedUpdateWithoutDiagnosisInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
   billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
@@ -850,14 +845,14 @@ export type TreatmentUncheckedUpdateWithoutDiagnosisInput = {
 
 export type TreatmentUncheckedUpdateManyWithoutDiagnosisInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TreatmentCreateManyDoctorInput = {
   treatment_id?: number
-  patient_id: number
+  patient_id: string
   diagnosis_id: number
   treatment_date: Date | string
 }
@@ -872,7 +867,7 @@ export type TreatmentUpdateWithoutDoctorInput = {
 
 export type TreatmentUncheckedUpdateWithoutDoctorInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
@@ -881,7 +876,7 @@ export type TreatmentUncheckedUpdateWithoutDoctorInput = {
 
 export type TreatmentUncheckedUpdateManyWithoutDoctorInput = {
   treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -971,8 +966,8 @@ export type $TreatmentPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     treatment_id: number
-    patient_id: number
-    doctor_id: number
+    patient_id: string
+    doctor_id: string
     diagnosis_id: number
     treatment_date: Date
   }, ExtArgs["result"]["treatment"]>
@@ -1350,8 +1345,8 @@ export interface Prisma__TreatmentClient<T, Null = never, ExtArgs extends runtim
  */
 export interface TreatmentFieldRefs {
   readonly treatment_id: Prisma.FieldRef<"Treatment", 'Int'>
-  readonly patient_id: Prisma.FieldRef<"Treatment", 'Int'>
-  readonly doctor_id: Prisma.FieldRef<"Treatment", 'Int'>
+  readonly patient_id: Prisma.FieldRef<"Treatment", 'String'>
+  readonly doctor_id: Prisma.FieldRef<"Treatment", 'String'>
   readonly diagnosis_id: Prisma.FieldRef<"Treatment", 'Int'>
   readonly treatment_date: Prisma.FieldRef<"Treatment", 'DateTime'>
 }

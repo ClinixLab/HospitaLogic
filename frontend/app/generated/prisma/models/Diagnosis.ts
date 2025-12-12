@@ -321,6 +321,14 @@ export type DiagnosisScalarRelationFilter = {
   isNot?: Prisma.DiagnosisWhereInput
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DiagnosisCreateNestedOneWithoutTreatmentsInput = {
   create?: Prisma.XOR<Prisma.DiagnosisCreateWithoutTreatmentsInput, Prisma.DiagnosisUncheckedCreateWithoutTreatmentsInput>
   connectOrCreate?: Prisma.DiagnosisCreateOrConnectWithoutTreatmentsInput

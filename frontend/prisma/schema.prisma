@@ -1,29 +1,28 @@
 generator client {
   provider = "prisma-client"
-  output = "../app/generated/prisma"
+  output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
 }
 
-
 model Patient {
-  patient_id Int    @id @default(autoincrement())
+  patient_id String @id @db.Char(36) // = Login.user_id
   name       String
   gender     String
   phone      String
 
-  // relations
   pii          PatientPII?
   appointments Appointment[]
   treatments   Treatment[]
   bills        Bill[]
-  login        Login? // 1:1 optional to Login
+
+  login Login @relation(fields: [patient_id], references: [user_id])
 }
 
 model PatientPII {
-  patient_id Int      @id
+  patient_id String   @id @db.Char(36)
   DOB        DateTime
   address    String
 
@@ -31,28 +30,35 @@ model PatientPII {
 }
 
 model Diagnosis {
-  diagnosis_id Int         @id @default(autoincrement())
+  diagnosis_id Int    @id @default(autoincrement())
   code         String
   description  String
   treatments   Treatment[]
 }
 
 model Department {
-  department_id Int      @id @default(autoincrement())
+  department_id Int @id @default(autoincrement())
   name          String
   location      String
-  doctors       Doctor[]
+
+  doctors     Doctor[]
+  specialties Specialty[]   
 }
 
 model Specialty {
-  specialty_id Int      @id @default(autoincrement())
-  name         String
-  description  String
-  doctors      Doctor[]
-}
+  specialty_id  Int @id @default(autoincrement())
+  name          String
+  description   String
 
+  department_id Int?         
+  department    Department?  @relation(fields: [department_id], references: [department_id])
+
+  doctors Doctor[]
+
+  @@index([department_id])
+}
 model Doctor {
-  doctor_id     Int    @id @default(autoincrement())
+  doctor_id     String @id @db.Char(36) // = Login.user_id
   name          String
   phone         String
   department_id Int
@@ -60,28 +66,31 @@ model Doctor {
 
   treatments   Treatment[]
   appointments Appointment[]
-  login        Login? // 1:1 optional to Login
 
   department Department @relation(fields: [department_id], references: [department_id])
   specialty  Specialty  @relation(fields: [specialty_id], references: [specialty_id])
+
+  login Login @relation(fields: [doctor_id], references: [user_id])
 }
 
 model Appointment {
   appointment_id Int      @id @default(autoincrement())
-  patient_id     Int
-  doctor_id      Int
+  patient_id     String   @db.Char(36)
+  doctor_id      String   @db.Char(36)
   date           DateTime
   time           String
   status         String
 
   patient Patient @relation(fields: [patient_id], references: [patient_id])
   doctor  Doctor  @relation(fields: [doctor_id], references: [doctor_id])
+
+  @@unique([doctor_id, date, time], name: "uniq_doctor_slot")
 }
 
 model Treatment {
   treatment_id   Int      @id @default(autoincrement())
-  patient_id     Int
-  doctor_id      Int
+  patient_id     String   @db.Char(36)
+  doctor_id      String   @db.Char(36)
   diagnosis_id   Int
   treatment_date DateTime
 
@@ -114,19 +123,19 @@ model TreatmentMedicine {
 
 model Bill {
   bill_id        Int      @id @default(autoincrement())
-  patient_id     Int
+  patient_id     String   @db.Char(36)
   total_amount   Decimal  @db.Decimal(10, 2)
   payment_status String
   bill_date      DateTime
 
   treatments BillTreatment[]
-  patient    Patient         @relation(fields: [patient_id], references: [patient_id])
+  patient    Patient @relation(fields: [patient_id], references: [patient_id])
 }
 
 model BillTreatment {
   bill_treatment_id Int @id @default(autoincrement())
   bill_id           Int
-  treatment_id      Int @unique // each treatment appears in at most one bill
+  treatment_id      Int @unique
 
   bill      Bill      @relation(fields: [bill_id], references: [bill_id])
   treatment Treatment @relation(fields: [treatment_id], references: [treatment_id])
@@ -138,26 +147,22 @@ enum Role {
 }
 
 model Login {
-  user_id         Int    @id @default(autoincrement())
+  user_id         String @id @default(uuid()) @db.Char(36) // ✅ UUID
   username        String @unique
   hashed_password String
   role            Role
 
-  patient_id Int? @unique
-  doctor_id  Int? @unique
-
-  patient Patient? @relation(fields: [patient_id], references: [patient_id])
-  doctor  Doctor?  @relation(fields: [doctor_id], references: [doctor_id])
-
+  patient    Patient?
+  doctor     Doctor?
   accessLogs AccessLog[]
 }
 
 model AccessLog {
   access_id   Int      @id @default(autoincrement())
-  user_id     Int
-  entity_type String // e.g. "AUTH", "PATIENT"
-  entity_id   Int
-  action      String // e.g. "LOGIN"
+  user_id     String   @db.Char(36)
+  entity_type String
+  entity_id   String   @db.VarChar(64) // ถ้า entity_id เคยเก็บ int ก็ยังเก็บเป็น string ได้
+  action      String
   access_time DateTime @default(now())
 
   user Login @relation(fields: [user_id], references: [user_id])
