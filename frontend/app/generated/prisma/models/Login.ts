@@ -42,7 +42,7 @@ export type LoginMinAggregateOutputType = {
   user_id: number | null
   username: string | null
   hashed_password: string | null
-  role: string | null
+  role: $Enums.Role | null
   patient_id: number | null
   doctor_id: number | null
 }
@@ -51,7 +51,7 @@ export type LoginMaxAggregateOutputType = {
   user_id: number | null
   username: string | null
   hashed_password: string | null
-  role: string | null
+  role: $Enums.Role | null
   patient_id: number | null
   doctor_id: number | null
 }
@@ -197,7 +197,7 @@ export type LoginGroupByOutputType = {
   user_id: number
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient_id: number | null
   doctor_id: number | null
   _count: LoginCountAggregateOutputType | null
@@ -229,7 +229,7 @@ export type LoginWhereInput = {
   user_id?: Prisma.IntFilter<"Login"> | number
   username?: Prisma.StringFilter<"Login"> | string
   hashed_password?: Prisma.StringFilter<"Login"> | string
-  role?: Prisma.StringFilter<"Login"> | string
+  role?: Prisma.EnumRoleFilter<"Login"> | $Enums.Role
   patient_id?: Prisma.IntNullableFilter<"Login"> | number | null
   doctor_id?: Prisma.IntNullableFilter<"Login"> | number | null
   patient?: Prisma.XOR<Prisma.PatientNullableScalarRelationFilter, Prisma.PatientWhereInput> | null
@@ -259,7 +259,7 @@ export type LoginWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LoginWhereInput[]
   NOT?: Prisma.LoginWhereInput | Prisma.LoginWhereInput[]
   hashed_password?: Prisma.StringFilter<"Login"> | string
-  role?: Prisma.StringFilter<"Login"> | string
+  role?: Prisma.EnumRoleFilter<"Login"> | $Enums.Role
   patient?: Prisma.XOR<Prisma.PatientNullableScalarRelationFilter, Prisma.PatientWhereInput> | null
   doctor?: Prisma.XOR<Prisma.DoctorNullableScalarRelationFilter, Prisma.DoctorWhereInput> | null
   accessLogs?: Prisma.AccessLogListRelationFilter
@@ -286,7 +286,7 @@ export type LoginScalarWhereWithAggregatesInput = {
   user_id?: Prisma.IntWithAggregatesFilter<"Login"> | number
   username?: Prisma.StringWithAggregatesFilter<"Login"> | string
   hashed_password?: Prisma.StringWithAggregatesFilter<"Login"> | string
-  role?: Prisma.StringWithAggregatesFilter<"Login"> | string
+  role?: Prisma.EnumRoleWithAggregatesFilter<"Login"> | $Enums.Role
   patient_id?: Prisma.IntNullableWithAggregatesFilter<"Login"> | number | null
   doctor_id?: Prisma.IntNullableWithAggregatesFilter<"Login"> | number | null
 }
@@ -294,7 +294,7 @@ export type LoginScalarWhereWithAggregatesInput = {
 export type LoginCreateInput = {
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient?: Prisma.PatientCreateNestedOneWithoutLoginInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutLoginInput
   accessLogs?: Prisma.AccessLogCreateNestedManyWithoutUserInput
@@ -304,7 +304,7 @@ export type LoginUncheckedCreateInput = {
   user_id?: number
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient_id?: number | null
   doctor_id?: number | null
   accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutUserInput
@@ -313,7 +313,7 @@ export type LoginUncheckedCreateInput = {
 export type LoginUpdateInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient?: Prisma.PatientUpdateOneWithoutLoginNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutLoginNestedInput
   accessLogs?: Prisma.AccessLogUpdateManyWithoutUserNestedInput
@@ -323,7 +323,7 @@ export type LoginUncheckedUpdateInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   doctor_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutUserNestedInput
@@ -333,7 +333,7 @@ export type LoginCreateManyInput = {
   user_id?: number
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient_id?: number | null
   doctor_id?: number | null
 }
@@ -341,14 +341,14 @@ export type LoginCreateManyInput = {
 export type LoginUpdateManyMutationInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
 }
 
 export type LoginUncheckedUpdateManyInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   doctor_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -472,6 +472,10 @@ export type LoginUncheckedUpdateOneWithoutDoctorNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LoginUpdateToOneWithWhereWithoutDoctorInput, Prisma.LoginUpdateWithoutDoctorInput>, Prisma.LoginUncheckedUpdateWithoutDoctorInput>
 }
 
+export type EnumRoleFieldUpdateOperationsInput = {
+  set?: $Enums.Role
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -497,7 +501,7 @@ export type LoginUpdateOneRequiredWithoutAccessLogsNestedInput = {
 export type LoginCreateWithoutPatientInput = {
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   doctor?: Prisma.DoctorCreateNestedOneWithoutLoginInput
   accessLogs?: Prisma.AccessLogCreateNestedManyWithoutUserInput
 }
@@ -506,7 +510,7 @@ export type LoginUncheckedCreateWithoutPatientInput = {
   user_id?: number
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   doctor_id?: number | null
   accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -530,7 +534,7 @@ export type LoginUpdateToOneWithWhereWithoutPatientInput = {
 export type LoginUpdateWithoutPatientInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   doctor?: Prisma.DoctorUpdateOneWithoutLoginNestedInput
   accessLogs?: Prisma.AccessLogUpdateManyWithoutUserNestedInput
 }
@@ -539,7 +543,7 @@ export type LoginUncheckedUpdateWithoutPatientInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   doctor_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -547,7 +551,7 @@ export type LoginUncheckedUpdateWithoutPatientInput = {
 export type LoginCreateWithoutDoctorInput = {
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient?: Prisma.PatientCreateNestedOneWithoutLoginInput
   accessLogs?: Prisma.AccessLogCreateNestedManyWithoutUserInput
 }
@@ -556,7 +560,7 @@ export type LoginUncheckedCreateWithoutDoctorInput = {
   user_id?: number
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient_id?: number | null
   accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutUserInput
 }
@@ -580,7 +584,7 @@ export type LoginUpdateToOneWithWhereWithoutDoctorInput = {
 export type LoginUpdateWithoutDoctorInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient?: Prisma.PatientUpdateOneWithoutLoginNestedInput
   accessLogs?: Prisma.AccessLogUpdateManyWithoutUserNestedInput
 }
@@ -589,7 +593,7 @@ export type LoginUncheckedUpdateWithoutDoctorInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -597,7 +601,7 @@ export type LoginUncheckedUpdateWithoutDoctorInput = {
 export type LoginCreateWithoutAccessLogsInput = {
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient?: Prisma.PatientCreateNestedOneWithoutLoginInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutLoginInput
 }
@@ -606,7 +610,7 @@ export type LoginUncheckedCreateWithoutAccessLogsInput = {
   user_id?: number
   username: string
   hashed_password: string
-  role: string
+  role: $Enums.Role
   patient_id?: number | null
   doctor_id?: number | null
 }
@@ -630,7 +634,7 @@ export type LoginUpdateToOneWithWhereWithoutAccessLogsInput = {
 export type LoginUpdateWithoutAccessLogsInput = {
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient?: Prisma.PatientUpdateOneWithoutLoginNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutLoginNestedInput
 }
@@ -639,7 +643,7 @@ export type LoginUncheckedUpdateWithoutAccessLogsInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
   username?: Prisma.StringFieldUpdateOperationsInput | string
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   doctor_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -718,7 +722,7 @@ export type $LoginPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     user_id: number
     username: string
     hashed_password: string
-    role: string
+    role: $Enums.Role
     patient_id: number | null
     doctor_id: number | null
   }, ExtArgs["result"]["login"]>
@@ -1096,7 +1100,7 @@ export interface LoginFieldRefs {
   readonly user_id: Prisma.FieldRef<"Login", 'Int'>
   readonly username: Prisma.FieldRef<"Login", 'String'>
   readonly hashed_password: Prisma.FieldRef<"Login", 'String'>
-  readonly role: Prisma.FieldRef<"Login", 'String'>
+  readonly role: Prisma.FieldRef<"Login", 'Role'>
   readonly patient_id: Prisma.FieldRef<"Login", 'Int'>
   readonly doctor_id: Prisma.FieldRef<"Login", 'Int'>
 }

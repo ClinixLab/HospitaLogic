@@ -315,8 +315,7 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 export const LoginOrderByRelevanceFieldEnum = {
   username: 'username',
-  hashed_password: 'hashed_password',
-  role: 'role'
+  hashed_password: 'hashed_password'
 } as const
 
 export type LoginOrderByRelevanceFieldEnum = (typeof LoginOrderByRelevanceFieldEnum)[keyof typeof LoginOrderByRelevanceFieldEnum]

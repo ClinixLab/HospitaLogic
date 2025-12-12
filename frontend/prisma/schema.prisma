@@ -132,11 +132,16 @@ model BillTreatment {
   treatment Treatment @relation(fields: [treatment_id], references: [treatment_id])
 }
 
+enum Role {
+  PATIENT
+  DOCTOR
+}
+
 model Login {
   user_id         Int    @id @default(autoincrement())
   username        String @unique
   hashed_password String
-  role            String // "admin", "doctor", "staff", "patient", ...
+  role            Role
 
   patient_id Int? @unique
   doctor_id  Int? @unique
