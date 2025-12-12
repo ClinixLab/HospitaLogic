@@ -207,9 +207,7 @@ export const LoginScalarFieldEnum = {
   user_id: 'user_id',
   username: 'username',
   hashed_password: 'hashed_password',
-  role: 'role',
-  patient_id: 'patient_id',
-  doctor_id: 'doctor_id'
+  role: 'role'
 } as const
 
 export type LoginScalarFieldEnum = (typeof LoginScalarFieldEnum)[keyof typeof LoginScalarFieldEnum]
@@ -236,6 +234,7 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
 export const PatientOrderByRelevanceFieldEnum = {
+  patient_id: 'patient_id',
   name: 'name',
   gender: 'gender',
   phone: 'phone'
@@ -245,6 +244,7 @@ export type PatientOrderByRelevanceFieldEnum = (typeof PatientOrderByRelevanceFi
 
 
 export const PatientPIIOrderByRelevanceFieldEnum = {
+  patient_id: 'patient_id',
   address: 'address'
 } as const
 
@@ -276,6 +276,7 @@ export type SpecialtyOrderByRelevanceFieldEnum = (typeof SpecialtyOrderByRelevan
 
 
 export const DoctorOrderByRelevanceFieldEnum = {
+  doctor_id: 'doctor_id',
   name: 'name',
   phone: 'phone'
 } as const
@@ -284,11 +285,21 @@ export type DoctorOrderByRelevanceFieldEnum = (typeof DoctorOrderByRelevanceFiel
 
 
 export const AppointmentOrderByRelevanceFieldEnum = {
+  patient_id: 'patient_id',
+  doctor_id: 'doctor_id',
   time: 'time',
   status: 'status'
 } as const
 
 export type AppointmentOrderByRelevanceFieldEnum = (typeof AppointmentOrderByRelevanceFieldEnum)[keyof typeof AppointmentOrderByRelevanceFieldEnum]
+
+
+export const TreatmentOrderByRelevanceFieldEnum = {
+  patient_id: 'patient_id',
+  doctor_id: 'doctor_id'
+} as const
+
+export type TreatmentOrderByRelevanceFieldEnum = (typeof TreatmentOrderByRelevanceFieldEnum)[keyof typeof TreatmentOrderByRelevanceFieldEnum]
 
 
 export const MedicineOrderByRelevanceFieldEnum = {
@@ -299,21 +310,15 @@ export type MedicineOrderByRelevanceFieldEnum = (typeof MedicineOrderByRelevance
 
 
 export const BillOrderByRelevanceFieldEnum = {
+  patient_id: 'patient_id',
   payment_status: 'payment_status'
 } as const
 
 export type BillOrderByRelevanceFieldEnum = (typeof BillOrderByRelevanceFieldEnum)[keyof typeof BillOrderByRelevanceFieldEnum]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const LoginOrderByRelevanceFieldEnum = {
+  user_id: 'user_id',
   username: 'username',
   hashed_password: 'hashed_password'
 } as const
@@ -322,7 +327,9 @@ export type LoginOrderByRelevanceFieldEnum = (typeof LoginOrderByRelevanceFieldE
 
 
 export const AccessLogOrderByRelevanceFieldEnum = {
+  user_id: 'user_id',
   entity_type: 'entity_type',
+  entity_id: 'entity_id',
   action: 'action'
 } as const
 

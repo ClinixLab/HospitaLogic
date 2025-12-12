@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import LogoutButton from "../components/LogoutButton";
 
 type NavUser = {
@@ -10,9 +13,12 @@ function roleLabel(role?: string) {
   return role === "DOCTOR" ? "Doctor" : "Patient";
 }
 
-export default function Navbar({ user }: { user?: NavUser | null }) {
-  const isLoggedIn = !!user?.username;
-  const role = user?.role || "PATIENT";
+export default function Navbar() {
+  const { data: session, status } = useSession();
+  const user = (session?.user ?? null) as any as NavUser | null;
+
+  const isLoggedIn = status === "authenticated" && !!user?.username;
+  const role: "PATIENT" | "DOCTOR" = (user?.role ?? "PATIENT") as any;
 
   const items = !isLoggedIn
     ? [
@@ -29,6 +35,7 @@ export default function Navbar({ user }: { user?: NavUser | null }) {
         { href: "/doctors", label: "รายชื่อแพทย์" },
         { href: "/medicines", label: "รายการยา" },
         { href: "/access-log", label: "ประวัติการใช้งาน" },
+        { href: "/settings", label: "ตั้งค่า" }, 
       ]
     : [
         { href: "/", label: "หน้าแรก" },
@@ -36,6 +43,7 @@ export default function Navbar({ user }: { user?: NavUser | null }) {
         { href: "/doctors", label: "รายชื่อแพทย์" },
         { href: "/bills", label: "บิล/การชำระเงิน" },
         { href: "/access-log", label: "ประวัติการใช้งาน" },
+         { href: "/settings", label: "ตั้งค่า" }, 
       ];
 
   return (
@@ -55,9 +63,11 @@ export default function Navbar({ user }: { user?: NavUser | null }) {
                 ระบบจัดการโรงพยาบาล • จองนัด • การรักษา • ใบแจ้งหนี้
               </div>
 
-              {isLoggedIn ? (
+              {status === "loading" ? (
+                <div className="mt-1 text-xs text-slate-400">กำลังตรวจสอบสถานะ...</div>
+              ) : isLoggedIn ? (
                 <div className="mt-1 text-xs text-emerald-700 font-semibold">
-                  Logged in: {user?.username} ({roleLabel(user?.role)})
+                  Logged in: {user?.username} ({roleLabel(role)})
                 </div>
               ) : (
                 <div className="mt-1 text-xs text-slate-400">ยังไม่ได้เข้าสู่ระบบ</div>

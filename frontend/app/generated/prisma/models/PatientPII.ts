@@ -20,28 +20,18 @@ export type PatientPIIModel = runtime.Types.Result.DefaultSelection<Prisma.$Pati
 
 export type AggregatePatientPII = {
   _count: PatientPIICountAggregateOutputType | null
-  _avg: PatientPIIAvgAggregateOutputType | null
-  _sum: PatientPIISumAggregateOutputType | null
   _min: PatientPIIMinAggregateOutputType | null
   _max: PatientPIIMaxAggregateOutputType | null
 }
 
-export type PatientPIIAvgAggregateOutputType = {
-  patient_id: number | null
-}
-
-export type PatientPIISumAggregateOutputType = {
-  patient_id: number | null
-}
-
 export type PatientPIIMinAggregateOutputType = {
-  patient_id: number | null
+  patient_id: string | null
   DOB: Date | null
   address: string | null
 }
 
 export type PatientPIIMaxAggregateOutputType = {
-  patient_id: number | null
+  patient_id: string | null
   DOB: Date | null
   address: string | null
 }
@@ -53,14 +43,6 @@ export type PatientPIICountAggregateOutputType = {
   _all: number
 }
 
-
-export type PatientPIIAvgAggregateInputType = {
-  patient_id?: true
-}
-
-export type PatientPIISumAggregateInputType = {
-  patient_id?: true
-}
 
 export type PatientPIIMinAggregateInputType = {
   patient_id?: true
@@ -119,18 +101,6 @@ export type PatientPIIAggregateArgs<ExtArgs extends runtime.Types.Extensions.Int
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: PatientPIIAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: PatientPIISumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: PatientPIIMinAggregateInputType
@@ -161,19 +131,15 @@ export type PatientPIIGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   _count?: PatientPIICountAggregateInputType | true
-  _avg?: PatientPIIAvgAggregateInputType
-  _sum?: PatientPIISumAggregateInputType
   _min?: PatientPIIMinAggregateInputType
   _max?: PatientPIIMaxAggregateInputType
 }
 
 export type PatientPIIGroupByOutputType = {
-  patient_id: number
+  patient_id: string
   DOB: Date
   address: string
   _count: PatientPIICountAggregateOutputType | null
-  _avg: PatientPIIAvgAggregateOutputType | null
-  _sum: PatientPIISumAggregateOutputType | null
   _min: PatientPIIMinAggregateOutputType | null
   _max: PatientPIIMaxAggregateOutputType | null
 }
@@ -197,7 +163,7 @@ export type PatientPIIWhereInput = {
   AND?: Prisma.PatientPIIWhereInput | Prisma.PatientPIIWhereInput[]
   OR?: Prisma.PatientPIIWhereInput[]
   NOT?: Prisma.PatientPIIWhereInput | Prisma.PatientPIIWhereInput[]
-  patient_id?: Prisma.IntFilter<"PatientPII"> | number
+  patient_id?: Prisma.StringFilter<"PatientPII"> | string
   DOB?: Prisma.DateTimeFilter<"PatientPII"> | Date | string
   address?: Prisma.StringFilter<"PatientPII"> | string
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
@@ -212,7 +178,7 @@ export type PatientPIIOrderByWithRelationInput = {
 }
 
 export type PatientPIIWhereUniqueInput = Prisma.AtLeast<{
-  patient_id?: number
+  patient_id?: string
   AND?: Prisma.PatientPIIWhereInput | Prisma.PatientPIIWhereInput[]
   OR?: Prisma.PatientPIIWhereInput[]
   NOT?: Prisma.PatientPIIWhereInput | Prisma.PatientPIIWhereInput[]
@@ -226,17 +192,15 @@ export type PatientPIIOrderByWithAggregationInput = {
   DOB?: Prisma.SortOrder
   address?: Prisma.SortOrder
   _count?: Prisma.PatientPIICountOrderByAggregateInput
-  _avg?: Prisma.PatientPIIAvgOrderByAggregateInput
   _max?: Prisma.PatientPIIMaxOrderByAggregateInput
   _min?: Prisma.PatientPIIMinOrderByAggregateInput
-  _sum?: Prisma.PatientPIISumOrderByAggregateInput
 }
 
 export type PatientPIIScalarWhereWithAggregatesInput = {
   AND?: Prisma.PatientPIIScalarWhereWithAggregatesInput | Prisma.PatientPIIScalarWhereWithAggregatesInput[]
   OR?: Prisma.PatientPIIScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PatientPIIScalarWhereWithAggregatesInput | Prisma.PatientPIIScalarWhereWithAggregatesInput[]
-  patient_id?: Prisma.IntWithAggregatesFilter<"PatientPII"> | number
+  patient_id?: Prisma.StringWithAggregatesFilter<"PatientPII"> | string
   DOB?: Prisma.DateTimeWithAggregatesFilter<"PatientPII"> | Date | string
   address?: Prisma.StringWithAggregatesFilter<"PatientPII"> | string
 }
@@ -248,7 +212,7 @@ export type PatientPIICreateInput = {
 }
 
 export type PatientPIIUncheckedCreateInput = {
-  patient_id: number
+  patient_id: string
   DOB: Date | string
   address: string
 }
@@ -260,13 +224,13 @@ export type PatientPIIUpdateInput = {
 }
 
 export type PatientPIIUncheckedUpdateInput = {
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   DOB?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PatientPIICreateManyInput = {
-  patient_id: number
+  patient_id: string
   DOB: Date | string
   address: string
 }
@@ -277,7 +241,7 @@ export type PatientPIIUpdateManyMutationInput = {
 }
 
 export type PatientPIIUncheckedUpdateManyInput = {
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   DOB?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -299,10 +263,6 @@ export type PatientPIICountOrderByAggregateInput = {
   address?: Prisma.SortOrder
 }
 
-export type PatientPIIAvgOrderByAggregateInput = {
-  patient_id?: Prisma.SortOrder
-}
-
 export type PatientPIIMaxOrderByAggregateInput = {
   patient_id?: Prisma.SortOrder
   DOB?: Prisma.SortOrder
@@ -313,10 +273,6 @@ export type PatientPIIMinOrderByAggregateInput = {
   patient_id?: Prisma.SortOrder
   DOB?: Prisma.SortOrder
   address?: Prisma.SortOrder
-}
-
-export type PatientPIISumOrderByAggregateInput = {
-  patient_id?: Prisma.SortOrder
 }
 
 export type PatientPIICreateNestedOneWithoutPatientInput = {
@@ -419,7 +375,7 @@ export type $PatientPIIPayload<ExtArgs extends runtime.Types.Extensions.Internal
     patient: Prisma.$PatientPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    patient_id: number
+    patient_id: string
     DOB: Date
     address: string
   }, ExtArgs["result"]["patientPII"]>
@@ -792,7 +748,7 @@ export interface Prisma__PatientPIIClient<T, Null = never, ExtArgs extends runti
  * Fields of the PatientPII model
  */
 export interface PatientPIIFieldRefs {
-  readonly patient_id: Prisma.FieldRef<"PatientPII", 'Int'>
+  readonly patient_id: Prisma.FieldRef<"PatientPII", 'String'>
   readonly DOB: Prisma.FieldRef<"PatientPII", 'DateTime'>
   readonly address: Prisma.FieldRef<"PatientPII", 'String'>
 }

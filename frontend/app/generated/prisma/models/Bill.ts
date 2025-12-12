@@ -28,19 +28,17 @@ export type AggregateBill = {
 
 export type BillAvgAggregateOutputType = {
   bill_id: number | null
-  patient_id: number | null
   total_amount: runtime.Decimal | null
 }
 
 export type BillSumAggregateOutputType = {
   bill_id: number | null
-  patient_id: number | null
   total_amount: runtime.Decimal | null
 }
 
 export type BillMinAggregateOutputType = {
   bill_id: number | null
-  patient_id: number | null
+  patient_id: string | null
   total_amount: runtime.Decimal | null
   payment_status: string | null
   bill_date: Date | null
@@ -48,7 +46,7 @@ export type BillMinAggregateOutputType = {
 
 export type BillMaxAggregateOutputType = {
   bill_id: number | null
-  patient_id: number | null
+  patient_id: string | null
   total_amount: runtime.Decimal | null
   payment_status: string | null
   bill_date: Date | null
@@ -66,13 +64,11 @@ export type BillCountAggregateOutputType = {
 
 export type BillAvgAggregateInputType = {
   bill_id?: true
-  patient_id?: true
   total_amount?: true
 }
 
 export type BillSumAggregateInputType = {
   bill_id?: true
-  patient_id?: true
   total_amount?: true
 }
 
@@ -189,7 +185,7 @@ export type BillGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type BillGroupByOutputType = {
   bill_id: number
-  patient_id: number
+  patient_id: string
   total_amount: runtime.Decimal
   payment_status: string
   bill_date: Date
@@ -220,7 +216,7 @@ export type BillWhereInput = {
   OR?: Prisma.BillWhereInput[]
   NOT?: Prisma.BillWhereInput | Prisma.BillWhereInput[]
   bill_id?: Prisma.IntFilter<"Bill"> | number
-  patient_id?: Prisma.IntFilter<"Bill"> | number
+  patient_id?: Prisma.StringFilter<"Bill"> | string
   total_amount?: Prisma.DecimalFilter<"Bill"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status?: Prisma.StringFilter<"Bill"> | string
   bill_date?: Prisma.DateTimeFilter<"Bill"> | Date | string
@@ -244,7 +240,7 @@ export type BillWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BillWhereInput | Prisma.BillWhereInput[]
   OR?: Prisma.BillWhereInput[]
   NOT?: Prisma.BillWhereInput | Prisma.BillWhereInput[]
-  patient_id?: Prisma.IntFilter<"Bill"> | number
+  patient_id?: Prisma.StringFilter<"Bill"> | string
   total_amount?: Prisma.DecimalFilter<"Bill"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status?: Prisma.StringFilter<"Bill"> | string
   bill_date?: Prisma.DateTimeFilter<"Bill"> | Date | string
@@ -270,7 +266,7 @@ export type BillScalarWhereWithAggregatesInput = {
   OR?: Prisma.BillScalarWhereWithAggregatesInput[]
   NOT?: Prisma.BillScalarWhereWithAggregatesInput | Prisma.BillScalarWhereWithAggregatesInput[]
   bill_id?: Prisma.IntWithAggregatesFilter<"Bill"> | number
-  patient_id?: Prisma.IntWithAggregatesFilter<"Bill"> | number
+  patient_id?: Prisma.StringWithAggregatesFilter<"Bill"> | string
   total_amount?: Prisma.DecimalWithAggregatesFilter<"Bill"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status?: Prisma.StringWithAggregatesFilter<"Bill"> | string
   bill_date?: Prisma.DateTimeWithAggregatesFilter<"Bill"> | Date | string
@@ -286,7 +282,7 @@ export type BillCreateInput = {
 
 export type BillUncheckedCreateInput = {
   bill_id?: number
-  patient_id: number
+  patient_id: string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status: string
   bill_date: Date | string
@@ -303,7 +299,7 @@ export type BillUpdateInput = {
 
 export type BillUncheckedUpdateInput = {
   bill_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status?: Prisma.StringFieldUpdateOperationsInput | string
   bill_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -312,7 +308,7 @@ export type BillUncheckedUpdateInput = {
 
 export type BillCreateManyInput = {
   bill_id?: number
-  patient_id: number
+  patient_id: string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status: string
   bill_date: Date | string
@@ -326,7 +322,7 @@ export type BillUpdateManyMutationInput = {
 
 export type BillUncheckedUpdateManyInput = {
   bill_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status?: Prisma.StringFieldUpdateOperationsInput | string
   bill_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -358,7 +354,6 @@ export type BillCountOrderByAggregateInput = {
 
 export type BillAvgOrderByAggregateInput = {
   bill_id?: Prisma.SortOrder
-  patient_id?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
 }
 
@@ -380,7 +375,6 @@ export type BillMinOrderByAggregateInput = {
 
 export type BillSumOrderByAggregateInput = {
   bill_id?: Prisma.SortOrder
-  patient_id?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
 }
 
@@ -491,7 +485,7 @@ export type BillScalarWhereInput = {
   OR?: Prisma.BillScalarWhereInput[]
   NOT?: Prisma.BillScalarWhereInput | Prisma.BillScalarWhereInput[]
   bill_id?: Prisma.IntFilter<"Bill"> | number
-  patient_id?: Prisma.IntFilter<"Bill"> | number
+  patient_id?: Prisma.StringFilter<"Bill"> | string
   total_amount?: Prisma.DecimalFilter<"Bill"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status?: Prisma.StringFilter<"Bill"> | string
   bill_date?: Prisma.DateTimeFilter<"Bill"> | Date | string
@@ -506,7 +500,7 @@ export type BillCreateWithoutTreatmentsInput = {
 
 export type BillUncheckedCreateWithoutTreatmentsInput = {
   bill_id?: number
-  patient_id: number
+  patient_id: string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status: string
   bill_date: Date | string
@@ -537,7 +531,7 @@ export type BillUpdateWithoutTreatmentsInput = {
 
 export type BillUncheckedUpdateWithoutTreatmentsInput = {
   bill_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   payment_status?: Prisma.StringFieldUpdateOperationsInput | string
   bill_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -639,7 +633,7 @@ export type $BillPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     bill_id: number
-    patient_id: number
+    patient_id: string
     total_amount: runtime.Decimal
     payment_status: string
     bill_date: Date
@@ -1015,7 +1009,7 @@ export interface Prisma__BillClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface BillFieldRefs {
   readonly bill_id: Prisma.FieldRef<"Bill", 'Int'>
-  readonly patient_id: Prisma.FieldRef<"Bill", 'Int'>
+  readonly patient_id: Prisma.FieldRef<"Bill", 'String'>
   readonly total_amount: Prisma.FieldRef<"Bill", 'Decimal'>
   readonly payment_status: Prisma.FieldRef<"Bill", 'String'>
   readonly bill_date: Prisma.FieldRef<"Bill", 'DateTime'>

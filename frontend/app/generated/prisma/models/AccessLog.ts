@@ -28,30 +28,26 @@ export type AggregateAccessLog = {
 
 export type AccessLogAvgAggregateOutputType = {
   access_id: number | null
-  user_id: number | null
-  entity_id: number | null
 }
 
 export type AccessLogSumAggregateOutputType = {
   access_id: number | null
-  user_id: number | null
-  entity_id: number | null
 }
 
 export type AccessLogMinAggregateOutputType = {
   access_id: number | null
-  user_id: number | null
+  user_id: string | null
   entity_type: string | null
-  entity_id: number | null
+  entity_id: string | null
   action: string | null
   access_time: Date | null
 }
 
 export type AccessLogMaxAggregateOutputType = {
   access_id: number | null
-  user_id: number | null
+  user_id: string | null
   entity_type: string | null
-  entity_id: number | null
+  entity_id: string | null
   action: string | null
   access_time: Date | null
 }
@@ -69,14 +65,10 @@ export type AccessLogCountAggregateOutputType = {
 
 export type AccessLogAvgAggregateInputType = {
   access_id?: true
-  user_id?: true
-  entity_id?: true
 }
 
 export type AccessLogSumAggregateInputType = {
   access_id?: true
-  user_id?: true
-  entity_id?: true
 }
 
 export type AccessLogMinAggregateInputType = {
@@ -195,9 +187,9 @@ export type AccessLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type AccessLogGroupByOutputType = {
   access_id: number
-  user_id: number
+  user_id: string
   entity_type: string
-  entity_id: number
+  entity_id: string
   action: string
   access_time: Date
   _count: AccessLogCountAggregateOutputType | null
@@ -227,9 +219,9 @@ export type AccessLogWhereInput = {
   OR?: Prisma.AccessLogWhereInput[]
   NOT?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
   access_id?: Prisma.IntFilter<"AccessLog"> | number
-  user_id?: Prisma.IntFilter<"AccessLog"> | number
+  user_id?: Prisma.StringFilter<"AccessLog"> | string
   entity_type?: Prisma.StringFilter<"AccessLog"> | string
-  entity_id?: Prisma.IntFilter<"AccessLog"> | number
+  entity_id?: Prisma.StringFilter<"AccessLog"> | string
   action?: Prisma.StringFilter<"AccessLog"> | string
   access_time?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
   user?: Prisma.XOR<Prisma.LoginScalarRelationFilter, Prisma.LoginWhereInput>
@@ -251,9 +243,9 @@ export type AccessLogWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
   OR?: Prisma.AccessLogWhereInput[]
   NOT?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
-  user_id?: Prisma.IntFilter<"AccessLog"> | number
+  user_id?: Prisma.StringFilter<"AccessLog"> | string
   entity_type?: Prisma.StringFilter<"AccessLog"> | string
-  entity_id?: Prisma.IntFilter<"AccessLog"> | number
+  entity_id?: Prisma.StringFilter<"AccessLog"> | string
   action?: Prisma.StringFilter<"AccessLog"> | string
   access_time?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
   user?: Prisma.XOR<Prisma.LoginScalarRelationFilter, Prisma.LoginWhereInput>
@@ -278,16 +270,16 @@ export type AccessLogScalarWhereWithAggregatesInput = {
   OR?: Prisma.AccessLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AccessLogScalarWhereWithAggregatesInput | Prisma.AccessLogScalarWhereWithAggregatesInput[]
   access_id?: Prisma.IntWithAggregatesFilter<"AccessLog"> | number
-  user_id?: Prisma.IntWithAggregatesFilter<"AccessLog"> | number
+  user_id?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
   entity_type?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
-  entity_id?: Prisma.IntWithAggregatesFilter<"AccessLog"> | number
+  entity_id?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
   action?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
   access_time?: Prisma.DateTimeWithAggregatesFilter<"AccessLog"> | Date | string
 }
 
 export type AccessLogCreateInput = {
   entity_type: string
-  entity_id: number
+  entity_id: string
   action: string
   access_time?: Date | string
   user: Prisma.LoginCreateNestedOneWithoutAccessLogsInput
@@ -295,16 +287,16 @@ export type AccessLogCreateInput = {
 
 export type AccessLogUncheckedCreateInput = {
   access_id?: number
-  user_id: number
+  user_id: string
   entity_type: string
-  entity_id: number
+  entity_id: string
   action: string
   access_time?: Date | string
 }
 
 export type AccessLogUpdateInput = {
   entity_type?: Prisma.StringFieldUpdateOperationsInput | string
-  entity_id?: Prisma.IntFieldUpdateOperationsInput | number
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.LoginUpdateOneRequiredWithoutAccessLogsNestedInput
@@ -312,34 +304,34 @@ export type AccessLogUpdateInput = {
 
 export type AccessLogUncheckedUpdateInput = {
   access_id?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   entity_type?: Prisma.StringFieldUpdateOperationsInput | string
-  entity_id?: Prisma.IntFieldUpdateOperationsInput | number
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccessLogCreateManyInput = {
   access_id?: number
-  user_id: number
+  user_id: string
   entity_type: string
-  entity_id: number
+  entity_id: string
   action: string
   access_time?: Date | string
 }
 
 export type AccessLogUpdateManyMutationInput = {
   entity_type?: Prisma.StringFieldUpdateOperationsInput | string
-  entity_id?: Prisma.IntFieldUpdateOperationsInput | number
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccessLogUncheckedUpdateManyInput = {
   access_id?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
   entity_type?: Prisma.StringFieldUpdateOperationsInput | string
-  entity_id?: Prisma.IntFieldUpdateOperationsInput | number
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -371,8 +363,6 @@ export type AccessLogCountOrderByAggregateInput = {
 
 export type AccessLogAvgOrderByAggregateInput = {
   access_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  entity_id?: Prisma.SortOrder
 }
 
 export type AccessLogMaxOrderByAggregateInput = {
@@ -395,8 +385,6 @@ export type AccessLogMinOrderByAggregateInput = {
 
 export type AccessLogSumOrderByAggregateInput = {
   access_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  entity_id?: Prisma.SortOrder
 }
 
 export type AccessLogCreateNestedManyWithoutUserInput = {
@@ -443,7 +431,7 @@ export type AccessLogUncheckedUpdateManyWithoutUserNestedInput = {
 
 export type AccessLogCreateWithoutUserInput = {
   entity_type: string
-  entity_id: number
+  entity_id: string
   action: string
   access_time?: Date | string
 }
@@ -451,7 +439,7 @@ export type AccessLogCreateWithoutUserInput = {
 export type AccessLogUncheckedCreateWithoutUserInput = {
   access_id?: number
   entity_type: string
-  entity_id: number
+  entity_id: string
   action: string
   access_time?: Date | string
 }
@@ -487,9 +475,9 @@ export type AccessLogScalarWhereInput = {
   OR?: Prisma.AccessLogScalarWhereInput[]
   NOT?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
   access_id?: Prisma.IntFilter<"AccessLog"> | number
-  user_id?: Prisma.IntFilter<"AccessLog"> | number
+  user_id?: Prisma.StringFilter<"AccessLog"> | string
   entity_type?: Prisma.StringFilter<"AccessLog"> | string
-  entity_id?: Prisma.IntFilter<"AccessLog"> | number
+  entity_id?: Prisma.StringFilter<"AccessLog"> | string
   action?: Prisma.StringFilter<"AccessLog"> | string
   access_time?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
 }
@@ -497,14 +485,14 @@ export type AccessLogScalarWhereInput = {
 export type AccessLogCreateManyUserInput = {
   access_id?: number
   entity_type: string
-  entity_id: number
+  entity_id: string
   action: string
   access_time?: Date | string
 }
 
 export type AccessLogUpdateWithoutUserInput = {
   entity_type?: Prisma.StringFieldUpdateOperationsInput | string
-  entity_id?: Prisma.IntFieldUpdateOperationsInput | number
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -512,7 +500,7 @@ export type AccessLogUpdateWithoutUserInput = {
 export type AccessLogUncheckedUpdateWithoutUserInput = {
   access_id?: Prisma.IntFieldUpdateOperationsInput | number
   entity_type?: Prisma.StringFieldUpdateOperationsInput | string
-  entity_id?: Prisma.IntFieldUpdateOperationsInput | number
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -520,7 +508,7 @@ export type AccessLogUncheckedUpdateWithoutUserInput = {
 export type AccessLogUncheckedUpdateManyWithoutUserInput = {
   access_id?: Prisma.IntFieldUpdateOperationsInput | number
   entity_type?: Prisma.StringFieldUpdateOperationsInput | string
-  entity_id?: Prisma.IntFieldUpdateOperationsInput | number
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -560,9 +548,9 @@ export type $AccessLogPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     access_id: number
-    user_id: number
+    user_id: string
     entity_type: string
-    entity_id: number
+    entity_id: string
     action: string
     access_time: Date
   }, ExtArgs["result"]["accessLog"]>
@@ -936,9 +924,9 @@ export interface Prisma__AccessLogClient<T, Null = never, ExtArgs extends runtim
  */
 export interface AccessLogFieldRefs {
   readonly access_id: Prisma.FieldRef<"AccessLog", 'Int'>
-  readonly user_id: Prisma.FieldRef<"AccessLog", 'Int'>
+  readonly user_id: Prisma.FieldRef<"AccessLog", 'String'>
   readonly entity_type: Prisma.FieldRef<"AccessLog", 'String'>
-  readonly entity_id: Prisma.FieldRef<"AccessLog", 'Int'>
+  readonly entity_id: Prisma.FieldRef<"AccessLog", 'String'>
   readonly action: Prisma.FieldRef<"AccessLog", 'String'>
   readonly access_time: Prisma.FieldRef<"AccessLog", 'DateTime'>
 }
