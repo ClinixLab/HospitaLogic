@@ -7,10 +7,15 @@ datasource db {
   provider = "mysql"
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
 model Patient {
   patient_id String @id @db.Char(36) // = Login.user_id
   name       String
-  gender     String
+  gender     Gender
   phone      String
 
   pii          PatientPII?
@@ -72,6 +77,12 @@ model Doctor {
 
   login Login @relation(fields: [doctor_id], references: [user_id])
 }
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
 
 model Appointment {
   appointment_id Int      @id @default(autoincrement())
@@ -79,7 +90,7 @@ model Appointment {
   doctor_id      String   @db.Char(36)
   date           DateTime
   time           String
-  status         String
+  status         AppointmentStatus
 
   patient Patient @relation(fields: [patient_id], references: [patient_id])
   doctor  Doctor  @relation(fields: [doctor_id], references: [doctor_id])

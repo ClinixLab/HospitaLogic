@@ -2,174 +2,174 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/db";
+import { parseUuid } from "@/lib/uuid";
 
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-function asUuid(v: unknown) {
-  const s = typeof v === "string" ? v.trim() : "";
-  return UUID_RE.test(s) ? s : null;
-}
-
-function isValidDate(d: Date) {
-  return d instanceof Date && !Number.isNaN(d.getTime());
-}
-
-async function getAuthed() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) return { ok: false as const, res: NextResponse.json({ message: "Unauthorized" }, { status: 401 }) };
-
-  const uid = asUuid((session.user as any).id);
-  if (!uid) return { ok: false as const, res: NextResponse.json({ message: "Unauthorized (invalid uid)" }, { status: 401 }) };
-
-  const login = await prisma.login.findUnique({
-    where: { user_id: uid },
-    select: { user_id: true, role: true, username: true },
-  });
-
-  if (!login) return { ok: false as const, res: NextResponse.json({ message: "Unauthorized" }, { status: 401 }) };
-
-  return { ok: true as const, uid, role: login.role as "PATIENT" | "DOCTOR", username: login.username };
-}
-
+/* ======================================================
+   GET /api/profile
+   ใช้โหลดข้อมูล settings
+====================================================== */
 export async function GET() {
-  const auth = await getAuthed();
-  if (!auth.ok) return auth.res;
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
-  const { uid, role } = auth;
+  const userId = parseUuid((session.user as any).id);
+  const role = (session.user as any).role;
 
+  if (!userId || !role) {
+    return NextResponse.json({ message: "Invalid session" }, { status: 400 });
+  }
+
+  /* ---------- PATIENT ---------- */
   if (role === "PATIENT") {
     const patient = await prisma.patient.findUnique({
-      where: { patient_id: uid },
-      select: {
-        patient_id: true,
-        name: true,
-        gender: true,
-        phone: true,
-        pii: { select: { DOB: true, address: true } },
-      },
+      where: { patient_id: userId },
+      include: { pii: true },
     });
 
-    if (!patient) return NextResponse.json({ message: "Profile not found" }, { status: 404 });
-    return NextResponse.json({ role, profile: patient });
+    if (!patient) {
+      return NextResponse.json(
+        { message: "Patient profile not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      role: "PATIENT",
+      profile: {
+        name: patient.name,
+        gender: patient.gender,
+        phone: patient.phone,
+        pii: patient.pii
+          ? {
+              DOB: patient.pii.DOB,
+              address: patient.pii.address,
+            }
+          : null,
+      },
+    });
   }
 
+  /* ---------- DOCTOR ---------- */
   if (role === "DOCTOR") {
     const doctor = await prisma.doctor.findUnique({
-      where: { doctor_id: uid },
+      where: { doctor_id: userId },
       select: {
-        doctor_id: true,
         name: true,
         phone: true,
         department_id: true,
         specialty_id: true,
-        department: { select: { department_id: true, name: true } },
-        specialty: { select: { specialty_id: true, name: true } },
       },
     });
 
-    if (!doctor) return NextResponse.json({ message: "Profile not found" }, { status: 404 });
-    return NextResponse.json({ role, profile: doctor });
+    if (!doctor) {
+      return NextResponse.json(
+        { message: "Doctor profile not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      role: "DOCTOR",
+      profile: doctor,
+    });
   }
 
-  return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+  return NextResponse.json({ message: "Invalid role" }, { status: 400 });
 }
 
+/* ======================================================
+   PATCH /api/profile
+   ใช้บันทึก settings
+====================================================== */
 export async function PATCH(req: Request) {
-  const auth = await getAuthed();
-  if (!auth.ok) return auth.res;
-
-  const { uid, role } = auth;
-  const body = await req.json().catch(() => null);
-
-  // ---------------- PATIENT ----------------
-  if (role === "PATIENT") {
-    const name = String(body?.name ?? "").trim();
-    const gender = String(body?.gender ?? "").trim();
-    const phone = String(body?.phone ?? "").trim();
-
-    if (!name || !gender || !phone) {
-      return NextResponse.json({ message: "name, gender, phone are required" }, { status: 400 });
-    }
-
-    const wantsPII = !!body?.pii_enabled;
-    const dobRaw = body?.DOB ? new Date(body.DOB) : null;
-    const address = typeof body?.address === "string" ? body.address.trim() : "";
-
-    if (wantsPII) {
-      if (!dobRaw || !isValidDate(dobRaw) || !address) {
-        return NextResponse.json(
-          { message: "DOB and address are required when PII is enabled" },
-          { status: 400 }
-        );
-      }
-    }
-
-    const updated = await prisma.$transaction(async (tx) => {
-      const patient = await tx.patient.update({
-        where: { patient_id: uid },
-        data: { name, gender, phone },
-        select: { patient_id: true, name: true, gender: true, phone: true },
-      });
-
-      let pii: null | { DOB: Date; address: string } = null;
-
-      if (wantsPII) {
-        pii = await tx.patientPII.upsert({
-          where: { patient_id: uid },
-          update: { DOB: dobRaw!, address },
-          create: { patient_id: uid, DOB: dobRaw!, address },
-          select: { DOB: true, address: true },
-        });
-      }
-
-      return { patient, pii };
-    });
-
-    return NextResponse.json({ message: "updated", role, ...updated });
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  // ---------------- DOCTOR ----------------
+  const userId = parseUuid((session.user as any).id);
+  const role = (session.user as any).role;
+
+  if (!userId || !role) {
+    return NextResponse.json({ message: "Invalid session" }, { status: 400 });
+  }
+
+  const body = await req.json().catch(() => null);
+  if (!body) {
+    return NextResponse.json({ message: "Invalid JSON" }, { status: 400 });
+  }
+
+  /* ---------- PATIENT ---------- */
+  if (role === "PATIENT") {
+    const { name, gender, phone, pii_enabled, DOB, address } = body;
+
+    if (!name || !gender || !phone) {
+      return NextResponse.json(
+        { message: "Missing required patient fields" },
+        { status: 400 }
+      );
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // update patient
+      await tx.patient.update({
+        where: { patient_id: userId },
+        data: { name, gender, phone },
+      });
+
+      if (pii_enabled) {
+        if (!DOB || !address) {
+          throw new Error("Missing PII fields");
+        }
+
+        await tx.patientPII.upsert({
+          where: { patient_id: userId },
+          create: {
+            patient_id: userId,
+            DOB: new Date(DOB),
+            address,
+          },
+          update: {
+            DOB: new Date(DOB),
+            address,
+          },
+        });
+      } else {
+        // ถ้าปิด PII → ลบออก
+        await tx.patientPII.deleteMany({
+          where: { patient_id: userId },
+        });
+      }
+    });
+
+    return NextResponse.json({ message: "Patient profile updated" });
+  }
+
+  /* ---------- DOCTOR ---------- */
   if (role === "DOCTOR") {
-    const name = String(body?.name ?? "").trim();
-    const phone = String(body?.phone ?? "").trim();
-    const department_id = Number(body?.department_id);
-    const specialty_id = Number(body?.specialty_id);
+    const { name, phone, department_id, specialty_id } = body;
 
-    if (!name || !phone) {
-      return NextResponse.json({ message: "name and phone are required" }, { status: 400 });
-    }
-    if (!department_id || Number.isNaN(department_id)) {
-      return NextResponse.json({ message: "department_id is required" }, { status: 400 });
-    }
-    if (!specialty_id || Number.isNaN(specialty_id)) {
-      return NextResponse.json({ message: "specialty_id is required" }, { status: 400 });
+    if (!name || !phone || !department_id || !specialty_id) {
+      return NextResponse.json(
+        { message: "Missing required doctor fields" },
+        { status: 400 }
+      );
     }
 
-    const [dep, spec] = await Promise.all([
-      prisma.department.findUnique({ where: { department_id }, select: { department_id: true } }),
-      prisma.specialty.findUnique({ where: { specialty_id }, select: { specialty_id: true } }),
-    ]);
-
-    if (!dep) return NextResponse.json({ message: "department_id not found" }, { status: 400 });
-    if (!spec) return NextResponse.json({ message: "specialty_id not found" }, { status: 400 });
-
-    const doctor = await prisma.doctor.update({
-      where: { doctor_id: uid },
-      data: { name, phone, department_id, specialty_id },
-      select: {
-        doctor_id: true,
-        name: true,
-        phone: true,
-        department_id: true,
-        specialty_id: true,
-        department: { select: { department_id: true, name: true } },
-        specialty: { select: { specialty_id: true, name: true } },
+    await prisma.doctor.update({
+      where: { doctor_id: userId },
+      data: {
+        name,
+        phone,
+        department_id: Number(department_id),
+        specialty_id: Number(specialty_id),
       },
     });
 
-    return NextResponse.json({ message: "updated", role, doctor });
+    return NextResponse.json({ message: "Doctor profile updated" });
   }
 
-  return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+  return NextResponse.json({ message: "Invalid role" }, { status: 400 });
 }
