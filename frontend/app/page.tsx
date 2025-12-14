@@ -44,6 +44,11 @@ export default async function Home() {
     ? "/appointments/new"
     : "/login?callbackUrl=/appointments/new";
 
+  // ✅ หน้าเดียว: /doctors/requests แต่เปลี่ยน default ได้ด้วย view
+  const doctorPendingHref = "/doctors/requests?view=pending";
+  const doctorTodayHref = "/doctors/requests?view=today";
+  const doctorAllHref = "/doctors/requests?view=all";
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
       {/* Hero */}
@@ -61,17 +66,13 @@ export default async function Home() {
 
           <p className="mt-3 text-slate-600">
             {role === "DOCTOR"
-              ? "ตรวจคำขอนัด • แก้เวลาชนกัน • ยืนยันนัด • บันทึก Treatment • ออกบิล"
+              ? "ตรวจคำขอนัด • นัดวันนี้ • นัดที่ยืนยันแล้วทั้งหมด • บันทึก Treatment • ออกบิล"
               : "เลือกอาการ/โรค • เลือก Specialty • เลือกแพทย์ • ส่งคำขอนัดหมาย"}
           </p>
 
           <div className="mt-6 flex justify-center">
             <Link
-              href={
-                role === "DOCTOR"
-                  ? "/doctor/requests"
-                  : bookHref
-              }
+              href={role === "DOCTOR" ? doctorPendingHref : bookHref}
               className="inline-flex items-center justify-center rounded-2xl px-6 py-4 text-base font-extrabold text-white
                          bg-gradient-to-r from-blue-600 via-teal-500 to-green-500
                          shadow-[0_12px_30px_rgba(16,185,129,0.25)]
@@ -153,23 +154,30 @@ export default async function Home() {
             </>
           )}
 
-          {/* DOCTOR: สองสายหลัก */}
+          {/* DOCTOR: ไปหน้าเดียว แต่ตั้ง default tab ตามที่กด */}
           {isLoggedIn && role === "DOCTOR" && (
             <>
               <Card
-                href="/doctor/requests"
-                title="คำขอนัดหมายเข้ามา"
-                desc="มีใครจองเข้ามาหาคุณบ้าง • กดเข้าไปจัดการได้"
+                href={doctorPendingHref}
+                title="Pending"
+                desc="คำขอนัดหมายที่รอหมอรับ/ไม่รับ"
                 icon={<span className="text-xl">📥</span>}
               />
               <Card
-                href="/doctor/confirmed"
-                title="นัดที่ยืนยันแล้ว"
-                desc="นัดที่ confirm แล้วและกำลังจะถึงวันนัด"
-                icon={<span className="text-xl">✅</span>}
+                href={doctorTodayHref}
+                title="Today"
+                desc="นัดที่ยืนยันแล้วเฉพาะวันนี้"
+                icon={<span className="text-xl">📅</span>}
               />
               <Card
-                href="/doctor/treatments"
+                href={doctorAllHref}
+                title="All Confirmed"
+                desc="นัดที่ยืนยันแล้วทั้งหมด"
+                icon={<span className="text-xl">✅</span>}
+              />
+
+              <Card
+                href="/treatments"
                 title="ใส่ Treatment + ออกบิล"
                 desc="เลือก Diagnosis • ใส่ยา • สร้าง Bill ส่งกลับคนไข้"
                 icon={<span className="text-xl">🩺</span>}

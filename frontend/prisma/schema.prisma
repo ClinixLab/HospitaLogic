@@ -92,11 +92,14 @@ model Appointment {
   time           String
   status         AppointmentStatus
 
+  symptom        String   @default("") @db.VarChar(500) // ✅ NEW
+
   patient Patient @relation(fields: [patient_id], references: [patient_id])
   doctor  Doctor  @relation(fields: [doctor_id], references: [doctor_id])
 
   @@unique([doctor_id, date, time], name: "uniq_doctor_slot")
 }
+
 
 model Treatment {
   treatment_id   Int      @id @default(autoincrement())
