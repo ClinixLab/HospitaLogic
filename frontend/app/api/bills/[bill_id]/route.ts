@@ -19,8 +19,8 @@ function getBillId(req: NextRequest, ctx: any) {
 
 function computeTotal(bill: any) {
   let total = new Prisma.Decimal(0);
-  for (const bt of bill.treatments) {
-    for (const tm of bt.treatment.medicines) {
+  for (const bt of bill.treatments ?? []) {
+    for (const tm of bt.treatment?.medicines ?? []) {
       total = total.add(new Prisma.Decimal(tm.quantity).mul(tm.medicine.price));
     }
   }
@@ -46,12 +46,23 @@ function aggregateMedicineUsage(bill: any) {
   }));
 }
 
+function requirePatient(auth: any) {
+  const login = auth?.login;
+  // auth ใหม่: login.user_id + login.role
+  if (!login) return { ok: false as const, status: 401, message: "Unauthorized" };
+  if (String(login.role || "").toUpperCase() !== "PATIENT")
+    return { ok: false as const, status: 403, message: "Patient only" };
+  if (!login.user_id) return { ok: false as const, status: 403, message: "Missing user_id" };
+
+  return { ok: true as const, patient_id: String(login.user_id) };
+}
+
 export async function GET(req: NextRequest, ctx: any) {
   const auth = await requireLogin();
-  if (!auth.ok)
-    return NextResponse.json({ ok: false, message: auth.message }, { status: auth.status });
-  if (!auth.login.patient_id)
-    return NextResponse.json({ ok: false, message: "Patient only" }, { status: 403 });
+  if (!auth.ok) return NextResponse.json({ ok: false, message: auth.message }, { status: auth.status });
+
+  const p = requirePatient(auth);
+  if (!p.ok) return NextResponse.json({ ok: false, message: p.message }, { status: p.status });
 
   const { raw, bill_id, params, url } = getBillId(req, ctx);
   if (!raw || !Number.isFinite(bill_id)) {
@@ -80,8 +91,11 @@ export async function GET(req: NextRequest, ctx: any) {
   });
 
   if (!bill) return NextResponse.json({ ok: false, message: "Bill not found" }, { status: 404 });
-  if (bill.patient_id !== auth.login.patient_id)
+
+  // ✅ auth ใหม่: เปรียบเทียบกับ user_id (ซึ่งเป็น patient_id ในระบบใหม่)
+  if (String(bill.patient_id) !== p.patient_id) {
     return NextResponse.json({ ok: false, message: "Forbidden" }, { status: 403 });
+  }
 
   const computed = computeTotal(bill);
 
@@ -89,16 +103,16 @@ export async function GET(req: NextRequest, ctx: any) {
     ok: true,
     bill,
     computed_total: computed.toString(),
-    stored_total: bill.total_amount.toString(),
+    stored_total: bill.total_amount?.toString?.() ?? String(bill.total_amount),
   });
 }
 
 export async function PATCH(req: NextRequest, ctx: any) {
   const auth = await requireLogin();
-  if (!auth.ok)
-    return NextResponse.json({ ok: false, message: auth.message }, { status: auth.status });
-  if (!auth.login.patient_id)
-    return NextResponse.json({ ok: false, message: "Patient only" }, { status: 403 });
+  if (!auth.ok) return NextResponse.json({ ok: false, message: auth.message }, { status: auth.status });
+
+  const p = requirePatient(auth);
+  if (!p.ok) return NextResponse.json({ ok: false, message: p.message }, { status: p.status });
 
   const { raw, bill_id, params, url } = getBillId(req, ctx);
   if (!raw || !Number.isFinite(bill_id)) {
@@ -121,7 +135,6 @@ export async function PATCH(req: NextRequest, ctx: any) {
 
   try {
     const result = await prisma.$transaction(async (tx) => {
-
       const bill = await tx.bill.findUnique({
         where: { bill_id },
         include: {
@@ -129,10 +142,7 @@ export async function PATCH(req: NextRequest, ctx: any) {
             include: {
               treatment: {
                 include: {
-                  medicines: {
-
-                    include: { medicine: true },
-                  },
+                  medicines: { include: { medicine: true } },
                 },
               },
             },
@@ -143,13 +153,15 @@ export async function PATCH(req: NextRequest, ctx: any) {
       if (!bill) {
         return { status: 404 as const, body: { ok: false, message: "Bill not found" } };
       }
-      if (bill.patient_id !== auth.login.patient_id) {
+
+      // ✅ auth ใหม่
+      if (String(bill.patient_id) !== p.patient_id) {
         return { status: 403 as const, body: { ok: false, message: "Forbidden" } };
       }
 
       const current = String(bill.payment_status || "").toUpperCase();
 
-
+      // ---------------- UNPAID ----------------
       if (payment_status === "UNPAID") {
         if (current === "PAID") {
           return {
@@ -169,7 +181,7 @@ export async function PATCH(req: NextRequest, ctx: any) {
         return { status: 200 as const, body: { ok: true, bill: updated } };
       }
 
-
+      // ---------------- PAID ----------------
       if (current === "PAID") {
         const fresh = await tx.bill.findUnique({ where: { bill_id } });
         return {
@@ -178,7 +190,7 @@ export async function PATCH(req: NextRequest, ctx: any) {
         };
       }
 
-
+      // mark paid (กันยิงซ้ำ)
       const mark = await tx.bill.updateMany({
         where: { bill_id, payment_status: { not: "PAID" } },
         data: { payment_status: "PAID" },
@@ -207,15 +219,14 @@ export async function PATCH(req: NextRequest, ctx: any) {
         const res = await tx.medicine.updateMany({
           where: {
             medicine_id: item.medicine_id,
-            quantity: { gte: item.quantity }, 
+            quantity: { gte: item.quantity },
           },
           data: {
-            quantity: { decrement: item.quantity }, 
+            quantity: { decrement: item.quantity },
           },
         });
 
         if (res.count !== 1) {
- 
           throw new Error(`INSUFFICIENT_STOCK:${item.medicine_id}:${item.quantity}`);
         }
 
@@ -234,7 +245,6 @@ export async function PATCH(req: NextRequest, ctx: any) {
   } catch (e: any) {
     const msg = String(e?.message || "");
 
-
     if (msg.startsWith("INSUFFICIENT_STOCK:")) {
       const [, medicine_id, need] = msg.split(":");
       return NextResponse.json(
@@ -248,9 +258,6 @@ export async function PATCH(req: NextRequest, ctx: any) {
       );
     }
 
-    return NextResponse.json(
-      { ok: false, message: "Failed to update bill", error: msg },
-      { status: 500 }
-    );
+    return NextResponse.json({ ok: false, message: "Failed to update bill", error: msg }, { status: 500 });
   }
 }

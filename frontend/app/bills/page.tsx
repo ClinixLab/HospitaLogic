@@ -12,15 +12,28 @@ export default async function BillsPage() {
   if (!session) redirect("/login?callbackUrl=/bills");
 
   const user = session.user as any;
-  const userId = Number(user?.user_id);
-  const username = user?.username;
+
+  // ✅ auth ใหม่: user_id / id เป็น UUID string
+  const user_id = (user?.user_id ?? user?.id ?? null) as string | null;
+  const username = (user?.username ?? null) as string | null;
+
+  if (!user_id && !username) redirect("/login?callbackUrl=/bills");
 
   const login = await prisma.login.findFirst({
-    where: Number.isFinite(userId) ? { user_id: userId } : { username },
-    select: { patient_id: true, username: true },
+    where: user_id ? { user_id: String(user_id) } : { username: String(username) },
+    select: { user_id: true, username: true, role: true },
   });
 
-  if (!login?.patient_id) redirect("/");
+  // ✅ bills เป็นของคนไข้เท่านั้น
+  if (!login || String(login.role).toUpperCase() !== "PATIENT") redirect("/");
 
-  return <BillsClient me={{ username: login.username, patient_id: login.patient_id }} />;
+  // ✅ ในระบบใหม่: patient_id == login.user_id (uuid)
+  return (
+    <BillsClient
+      me={{
+        username: login.username,
+        patient_id: login.user_id as any, // ถ้า BillsClient ยัง type เป็น number ให้แก้ type เป็น string ได้เลย
+      }}
+    />
+  );
 }
