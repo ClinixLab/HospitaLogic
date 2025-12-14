@@ -147,7 +147,8 @@ export const AppointmentScalarFieldEnum = {
   doctor_id: 'doctor_id',
   date: 'date',
   time: 'time',
-  status: 'status'
+  status: 'status',
+  symptom: 'symptom'
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
@@ -237,7 +238,6 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 export const PatientOrderByRelevanceFieldEnum = {
   patient_id: 'patient_id',
   name: 'name',
-  gender: 'gender',
   phone: 'phone'
 } as const
 
@@ -297,7 +297,7 @@ export const AppointmentOrderByRelevanceFieldEnum = {
   patient_id: 'patient_id',
   doctor_id: 'doctor_id',
   time: 'time',
-  status: 'status'
+  symptom: 'symptom'
 } as const
 
 export type AppointmentOrderByRelevanceFieldEnum = (typeof AppointmentOrderByRelevanceFieldEnum)[keyof typeof AppointmentOrderByRelevanceFieldEnum]

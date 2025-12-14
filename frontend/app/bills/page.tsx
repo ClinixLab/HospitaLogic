@@ -1,49 +1,39 @@
-"use client";
+// app/bills/page.tsx
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth-options";
+import { prisma } from "@/lib/db";
+import BillsClient from "./BillsClient";
 
-import { useEffect, useState } from "react";
+export const dynamic = "force-dynamic";
 
-export default function BillsPage() {
-  const [rows, setRows] = useState<any[]>([]);
+export default async function BillsPage() {
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("/login?callbackUrl=/bills");
 
-  useEffect(() => {
-    fetch("/api/bills")
-      .then(r => r.json())
-      .then(setRows);
-  }, []);
+  const user = session.user as any;
 
+  // ✅ auth ใหม่: user_id / id เป็น UUID string
+  const user_id = (user?.user_id ?? user?.id ?? null) as string | null;
+  const username = (user?.username ?? null) as string | null;
+
+  if (!user_id && !username) redirect("/login?callbackUrl=/bills");
+
+  const login = await prisma.login.findFirst({
+    where: user_id ? { user_id: String(user_id) } : { username: String(username) },
+    select: { user_id: true, username: true, role: true },
+  });
+
+  // ✅ bills เป็นของคนไข้เท่านั้น
+  if (!login || String(login.role).toUpperCase() !== "PATIENT") redirect("/");
+
+  // ✅ ในระบบใหม่: patient_id == login.user_id (uuid)
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-4">Bills</h1>
-      <table className="w-full bg-white shadow text-sm">
-        <thead className="bg-slate-100">
-          <tr>
-            <th className="px-3 py-2 border">Bill ID</th>
-            <th className="px-3 py-2 border">Patient</th>
-            <th className="px-3 py-2 border">Total</th>
-            <th className="px-3 py-2 border">Status</th>
-            <th className="px-3 py-2 border">Date</th>
-            <th className="px-3 py-2 border">Treatments</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(b => (
-            <tr key={b.bill_id} className="hover:bg-slate-50">
-              <td className="px-3 py-2 border">{b.bill_id}</td>
-              <td className="px-3 py-2 border">{b.patient?.name}</td>
-              <td className="px-3 py-2 border">{b.total_amount}</td>
-              <td className="px-3 py-2 border">{b.payment_status}</td>
-              <td className="px-3 py-2 border">
-                {new Date(b.bill_date).toLocaleDateString()}
-              </td>
-              <td className="px-3 py-2 border">
-                {b.treatments
-                  .map((bt: any) => bt.treatment?.treatment_id)
-                  .join(", ")}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <BillsClient
+      me={{
+        username: login.username,
+        patient_id: login.user_id as any, // ถ้า BillsClient ยัง type เป็น number ให้แก้ type เป็น string ได้เลย
+      }}
+    />
   );
 }

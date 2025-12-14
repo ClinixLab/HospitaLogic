@@ -62,7 +62,7 @@ export async function GET(req: Request) {
     where: {
       doctor_id, 
       date: { gte: dayStart, lt: dayEnd },
-      status: { notIn: ["CANCELLED", "REJECTED"] },
+      status: { notIn: ["CANCELLED"] },
     },
     select: { time: true },
   });

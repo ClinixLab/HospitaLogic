@@ -37,7 +37,7 @@ export async function POST(req: Request) {
           data: {
             patient_id: createdLogin.user_id, // ✅ เท่ากัน
             name: username,                   // placeholder ไว้ก่อน
-            gender: "UNKNOWN",
+            gender: "OTHER",
             phone: "N/A",
           },
           select: { patient_id: true },

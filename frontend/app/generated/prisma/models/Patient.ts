@@ -27,14 +27,14 @@ export type AggregatePatient = {
 export type PatientMinAggregateOutputType = {
   patient_id: string | null
   name: string | null
-  gender: string | null
+  gender: $Enums.Gender | null
   phone: string | null
 }
 
 export type PatientMaxAggregateOutputType = {
   patient_id: string | null
   name: string | null
-  gender: string | null
+  gender: $Enums.Gender | null
   phone: string | null
 }
 
@@ -144,7 +144,7 @@ export type PatientGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type PatientGroupByOutputType = {
   patient_id: string
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   _count: PatientCountAggregateOutputType | null
   _min: PatientMinAggregateOutputType | null
@@ -172,7 +172,7 @@ export type PatientWhereInput = {
   NOT?: Prisma.PatientWhereInput | Prisma.PatientWhereInput[]
   patient_id?: Prisma.StringFilter<"Patient"> | string
   name?: Prisma.StringFilter<"Patient"> | string
-  gender?: Prisma.StringFilter<"Patient"> | string
+  gender?: Prisma.EnumGenderFilter<"Patient"> | $Enums.Gender
   phone?: Prisma.StringFilter<"Patient"> | string
   pii?: Prisma.XOR<Prisma.PatientPIINullableScalarRelationFilter, Prisma.PatientPIIWhereInput> | null
   appointments?: Prisma.AppointmentListRelationFilter
@@ -200,7 +200,7 @@ export type PatientWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PatientWhereInput[]
   NOT?: Prisma.PatientWhereInput | Prisma.PatientWhereInput[]
   name?: Prisma.StringFilter<"Patient"> | string
-  gender?: Prisma.StringFilter<"Patient"> | string
+  gender?: Prisma.EnumGenderFilter<"Patient"> | $Enums.Gender
   phone?: Prisma.StringFilter<"Patient"> | string
   pii?: Prisma.XOR<Prisma.PatientPIINullableScalarRelationFilter, Prisma.PatientPIIWhereInput> | null
   appointments?: Prisma.AppointmentListRelationFilter
@@ -225,13 +225,13 @@ export type PatientScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PatientScalarWhereWithAggregatesInput | Prisma.PatientScalarWhereWithAggregatesInput[]
   patient_id?: Prisma.StringWithAggregatesFilter<"Patient"> | string
   name?: Prisma.StringWithAggregatesFilter<"Patient"> | string
-  gender?: Prisma.StringWithAggregatesFilter<"Patient"> | string
+  gender?: Prisma.EnumGenderWithAggregatesFilter<"Patient"> | $Enums.Gender
   phone?: Prisma.StringWithAggregatesFilter<"Patient"> | string
 }
 
 export type PatientCreateInput = {
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIICreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
@@ -243,7 +243,7 @@ export type PatientCreateInput = {
 export type PatientUncheckedCreateInput = {
   patient_id: string
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIIUncheckedCreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
@@ -253,7 +253,7 @@ export type PatientUncheckedCreateInput = {
 
 export type PatientUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
@@ -265,7 +265,7 @@ export type PatientUpdateInput = {
 export type PatientUncheckedUpdateInput = {
   patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUncheckedUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
@@ -276,20 +276,20 @@ export type PatientUncheckedUpdateInput = {
 export type PatientCreateManyInput = {
   patient_id: string
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
 }
 
 export type PatientUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PatientUncheckedUpdateManyInput = {
   patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -332,6 +332,10 @@ export type PatientNullableScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type EnumGenderFieldUpdateOperationsInput = {
+  set?: $Enums.Gender
 }
 
 export type PatientCreateNestedOneWithoutPiiInput = {
@@ -424,7 +428,7 @@ export type PatientUncheckedUpdateOneWithoutLoginNestedInput = {
 
 export type PatientCreateWithoutPiiInput = {
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
   treatments?: Prisma.TreatmentCreateNestedManyWithoutPatientInput
@@ -435,7 +439,7 @@ export type PatientCreateWithoutPiiInput = {
 export type PatientUncheckedCreateWithoutPiiInput = {
   patient_id: string
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
   treatments?: Prisma.TreatmentUncheckedCreateNestedManyWithoutPatientInput
@@ -460,7 +464,7 @@ export type PatientUpdateToOneWithWhereWithoutPiiInput = {
 
 export type PatientUpdateWithoutPiiInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
   treatments?: Prisma.TreatmentUpdateManyWithoutPatientNestedInput
@@ -471,7 +475,7 @@ export type PatientUpdateWithoutPiiInput = {
 export type PatientUncheckedUpdateWithoutPiiInput = {
   patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
   treatments?: Prisma.TreatmentUncheckedUpdateManyWithoutPatientNestedInput
@@ -480,7 +484,7 @@ export type PatientUncheckedUpdateWithoutPiiInput = {
 
 export type PatientCreateWithoutAppointmentsInput = {
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIICreateNestedOneWithoutPatientInput
   treatments?: Prisma.TreatmentCreateNestedManyWithoutPatientInput
@@ -491,7 +495,7 @@ export type PatientCreateWithoutAppointmentsInput = {
 export type PatientUncheckedCreateWithoutAppointmentsInput = {
   patient_id: string
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIIUncheckedCreateNestedOneWithoutPatientInput
   treatments?: Prisma.TreatmentUncheckedCreateNestedManyWithoutPatientInput
@@ -516,7 +520,7 @@ export type PatientUpdateToOneWithWhereWithoutAppointmentsInput = {
 
 export type PatientUpdateWithoutAppointmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUpdateOneWithoutPatientNestedInput
   treatments?: Prisma.TreatmentUpdateManyWithoutPatientNestedInput
@@ -527,7 +531,7 @@ export type PatientUpdateWithoutAppointmentsInput = {
 export type PatientUncheckedUpdateWithoutAppointmentsInput = {
   patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUncheckedUpdateOneWithoutPatientNestedInput
   treatments?: Prisma.TreatmentUncheckedUpdateManyWithoutPatientNestedInput
@@ -536,7 +540,7 @@ export type PatientUncheckedUpdateWithoutAppointmentsInput = {
 
 export type PatientCreateWithoutTreatmentsInput = {
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIICreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
@@ -547,7 +551,7 @@ export type PatientCreateWithoutTreatmentsInput = {
 export type PatientUncheckedCreateWithoutTreatmentsInput = {
   patient_id: string
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIIUncheckedCreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
@@ -572,7 +576,7 @@ export type PatientUpdateToOneWithWhereWithoutTreatmentsInput = {
 
 export type PatientUpdateWithoutTreatmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
@@ -583,7 +587,7 @@ export type PatientUpdateWithoutTreatmentsInput = {
 export type PatientUncheckedUpdateWithoutTreatmentsInput = {
   patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUncheckedUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
@@ -592,7 +596,7 @@ export type PatientUncheckedUpdateWithoutTreatmentsInput = {
 
 export type PatientCreateWithoutBillsInput = {
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIICreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
@@ -603,7 +607,7 @@ export type PatientCreateWithoutBillsInput = {
 export type PatientUncheckedCreateWithoutBillsInput = {
   patient_id: string
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIIUncheckedCreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
@@ -628,7 +632,7 @@ export type PatientUpdateToOneWithWhereWithoutBillsInput = {
 
 export type PatientUpdateWithoutBillsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
@@ -639,7 +643,7 @@ export type PatientUpdateWithoutBillsInput = {
 export type PatientUncheckedUpdateWithoutBillsInput = {
   patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUncheckedUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
@@ -648,7 +652,7 @@ export type PatientUncheckedUpdateWithoutBillsInput = {
 
 export type PatientCreateWithoutLoginInput = {
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIICreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
@@ -658,7 +662,7 @@ export type PatientCreateWithoutLoginInput = {
 
 export type PatientUncheckedCreateWithoutLoginInput = {
   name: string
-  gender: string
+  gender: $Enums.Gender
   phone: string
   pii?: Prisma.PatientPIIUncheckedCreateNestedOneWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
@@ -684,7 +688,7 @@ export type PatientUpdateToOneWithWhereWithoutLoginInput = {
 
 export type PatientUpdateWithoutLoginInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
@@ -694,7 +698,7 @@ export type PatientUpdateWithoutLoginInput = {
 
 export type PatientUncheckedUpdateWithoutLoginInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   pii?: Prisma.PatientPIIUncheckedUpdateOneWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
@@ -795,7 +799,7 @@ export type $PatientPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     patient_id: string
     name: string
-    gender: string
+    gender: $Enums.Gender
     phone: string
   }, ExtArgs["result"]["patient"]>
   composites: {}
@@ -1173,7 +1177,7 @@ export interface Prisma__PatientClient<T, Null = never, ExtArgs extends runtime.
 export interface PatientFieldRefs {
   readonly patient_id: Prisma.FieldRef<"Patient", 'String'>
   readonly name: Prisma.FieldRef<"Patient", 'String'>
-  readonly gender: Prisma.FieldRef<"Patient", 'String'>
+  readonly gender: Prisma.FieldRef<"Patient", 'Gender'>
   readonly phone: Prisma.FieldRef<"Patient", 'String'>
 }
     
