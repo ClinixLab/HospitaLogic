@@ -1534,7 +1534,6 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 export const PatientOrderByRelevanceFieldEnum = {
   patient_id: 'patient_id',
   name: 'name',
-  gender: 'gender',
   phone: 'phone'
 } as const
 
@@ -1593,8 +1592,7 @@ export type DoctorOrderByRelevanceFieldEnum = (typeof DoctorOrderByRelevanceFiel
 export const AppointmentOrderByRelevanceFieldEnum = {
   patient_id: 'patient_id',
   doctor_id: 'doctor_id',
-  time: 'time',
-  status: 'status'
+  time: 'time'
 } as const
 
 export type AppointmentOrderByRelevanceFieldEnum = (typeof AppointmentOrderByRelevanceFieldEnum)[keyof typeof AppointmentOrderByRelevanceFieldEnum]
@@ -1656,6 +1654,13 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
+ * Reference to a field of type 'Gender'
+ */
+export type EnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1666,6 +1671,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'AppointmentStatus'
+ */
+export type EnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus'>
     
 
 

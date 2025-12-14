@@ -237,7 +237,6 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 export const PatientOrderByRelevanceFieldEnum = {
   patient_id: 'patient_id',
   name: 'name',
-  gender: 'gender',
   phone: 'phone'
 } as const
 
@@ -296,8 +295,7 @@ export type DoctorOrderByRelevanceFieldEnum = (typeof DoctorOrderByRelevanceFiel
 export const AppointmentOrderByRelevanceFieldEnum = {
   patient_id: 'patient_id',
   doctor_id: 'doctor_id',
-  time: 'time',
-  status: 'status'
+  time: 'time'
 } as const
 
 export type AppointmentOrderByRelevanceFieldEnum = (typeof AppointmentOrderByRelevanceFieldEnum)[keyof typeof AppointmentOrderByRelevanceFieldEnum]
