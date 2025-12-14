@@ -90,4 +90,3 @@ export async function PUT(
     message: "Appointment cancelled",
     appointment: updated,
   });
-}
