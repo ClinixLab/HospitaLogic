@@ -1,49 +1,26 @@
-"use client";
+// app/bills/page.tsx
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth-options";
+import { prisma } from "@/lib/db";
+import BillsClient from "./BillsClient";
 
-import { useEffect, useState } from "react";
+export const dynamic = "force-dynamic";
 
-export default function BillsPage() {
-  const [rows, setRows] = useState<any[]>([]);
+export default async function BillsPage() {
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("/login?callbackUrl=/bills");
 
-  useEffect(() => {
-    fetch("/api/bills")
-      .then(r => r.json())
-      .then(setRows);
-  }, []);
+  const user = session.user as any;
+  const userId = Number(user?.user_id);
+  const username = user?.username;
 
-  return (
-    <div>
-      <h1 className="text-3xl font-bold mb-4">Bills</h1>
-      <table className="w-full bg-white shadow text-sm">
-        <thead className="bg-slate-100">
-          <tr>
-            <th className="px-3 py-2 border">Bill ID</th>
-            <th className="px-3 py-2 border">Patient</th>
-            <th className="px-3 py-2 border">Total</th>
-            <th className="px-3 py-2 border">Status</th>
-            <th className="px-3 py-2 border">Date</th>
-            <th className="px-3 py-2 border">Treatments</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(b => (
-            <tr key={b.bill_id} className="hover:bg-slate-50">
-              <td className="px-3 py-2 border">{b.bill_id}</td>
-              <td className="px-3 py-2 border">{b.patient?.name}</td>
-              <td className="px-3 py-2 border">{b.total_amount}</td>
-              <td className="px-3 py-2 border">{b.payment_status}</td>
-              <td className="px-3 py-2 border">
-                {new Date(b.bill_date).toLocaleDateString()}
-              </td>
-              <td className="px-3 py-2 border">
-                {b.treatments
-                  .map((bt: any) => bt.treatment?.treatment_id)
-                  .join(", ")}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  const login = await prisma.login.findFirst({
+    where: Number.isFinite(userId) ? { user_id: userId } : { username },
+    select: { patient_id: true, username: true },
+  });
+
+  if (!login?.patient_id) redirect("/");
+
+  return <BillsClient me={{ username: login.username, patient_id: login.patient_id }} />;
 }
