@@ -28,32 +28,28 @@ export type AggregateAppointment = {
 
 export type AppointmentAvgAggregateOutputType = {
   appointment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
 }
 
 export type AppointmentSumAggregateOutputType = {
   appointment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
 }
 
 export type AppointmentMinAggregateOutputType = {
   appointment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
+  patient_id: string | null
+  doctor_id: string | null
   date: Date | null
   time: string | null
-  status: string | null
+  status: $Enums.AppointmentStatus | null
 }
 
 export type AppointmentMaxAggregateOutputType = {
   appointment_id: number | null
-  patient_id: number | null
-  doctor_id: number | null
+  patient_id: string | null
+  doctor_id: string | null
   date: Date | null
   time: string | null
-  status: string | null
+  status: $Enums.AppointmentStatus | null
 }
 
 export type AppointmentCountAggregateOutputType = {
@@ -69,14 +65,10 @@ export type AppointmentCountAggregateOutputType = {
 
 export type AppointmentAvgAggregateInputType = {
   appointment_id?: true
-  patient_id?: true
-  doctor_id?: true
 }
 
 export type AppointmentSumAggregateInputType = {
   appointment_id?: true
-  patient_id?: true
-  doctor_id?: true
 }
 
 export type AppointmentMinAggregateInputType = {
@@ -195,11 +187,11 @@ export type AppointmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type AppointmentGroupByOutputType = {
   appointment_id: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   date: Date
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
   _count: AppointmentCountAggregateOutputType | null
   _avg: AppointmentAvgAggregateOutputType | null
   _sum: AppointmentSumAggregateOutputType | null
@@ -227,11 +219,11 @@ export type AppointmentWhereInput = {
   OR?: Prisma.AppointmentWhereInput[]
   NOT?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
   appointment_id?: Prisma.IntFilter<"Appointment"> | number
-  patient_id?: Prisma.IntFilter<"Appointment"> | number
-  doctor_id?: Prisma.IntFilter<"Appointment"> | number
+  patient_id?: Prisma.StringFilter<"Appointment"> | string
+  doctor_id?: Prisma.StringFilter<"Appointment"> | string
   date?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   time?: Prisma.StringFilter<"Appointment"> | string
-  status?: Prisma.StringFilter<"Appointment"> | string
+  status?: Prisma.EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   doctor?: Prisma.XOR<Prisma.DoctorScalarRelationFilter, Prisma.DoctorWhereInput>
 }
@@ -250,17 +242,18 @@ export type AppointmentOrderByWithRelationInput = {
 
 export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   appointment_id?: number
+  uniq_doctor_slot?: Prisma.AppointmentUniq_doctor_slotCompoundUniqueInput
   AND?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
   OR?: Prisma.AppointmentWhereInput[]
   NOT?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
-  patient_id?: Prisma.IntFilter<"Appointment"> | number
-  doctor_id?: Prisma.IntFilter<"Appointment"> | number
+  patient_id?: Prisma.StringFilter<"Appointment"> | string
+  doctor_id?: Prisma.StringFilter<"Appointment"> | string
   date?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   time?: Prisma.StringFilter<"Appointment"> | string
-  status?: Prisma.StringFilter<"Appointment"> | string
+  status?: Prisma.EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   doctor?: Prisma.XOR<Prisma.DoctorScalarRelationFilter, Prisma.DoctorWhereInput>
-}, "appointment_id">
+}, "appointment_id" | "uniq_doctor_slot">
 
 export type AppointmentOrderByWithAggregationInput = {
   appointment_id?: Prisma.SortOrder
@@ -281,69 +274,69 @@ export type AppointmentScalarWhereWithAggregatesInput = {
   OR?: Prisma.AppointmentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AppointmentScalarWhereWithAggregatesInput | Prisma.AppointmentScalarWhereWithAggregatesInput[]
   appointment_id?: Prisma.IntWithAggregatesFilter<"Appointment"> | number
-  patient_id?: Prisma.IntWithAggregatesFilter<"Appointment"> | number
-  doctor_id?: Prisma.IntWithAggregatesFilter<"Appointment"> | number
+  patient_id?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
+  doctor_id?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
   time?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
-  status?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
+  status?: Prisma.EnumAppointmentStatusWithAggregatesFilter<"Appointment"> | $Enums.AppointmentStatus
 }
 
 export type AppointmentCreateInput = {
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
 }
 
 export type AppointmentUncheckedCreateInput = {
   appointment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
 }
 
 export type AppointmentUpdateInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutAppointmentsNestedInput
 }
 
 export type AppointmentUncheckedUpdateInput = {
   appointment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
 }
 
 export type AppointmentCreateManyInput = {
   appointment_id?: number
-  patient_id: number
-  doctor_id: number
+  patient_id: string
+  doctor_id: string
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
 }
 
 export type AppointmentUpdateManyMutationInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
 }
 
 export type AppointmentUncheckedUpdateManyInput = {
   appointment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
 }
 
 export type AppointmentListRelationFilter = {
@@ -362,6 +355,12 @@ export type AppointmentOrderByRelevanceInput = {
   search: string
 }
 
+export type AppointmentUniq_doctor_slotCompoundUniqueInput = {
+  doctor_id: string
+  date: Date | string
+  time: string
+}
+
 export type AppointmentCountOrderByAggregateInput = {
   appointment_id?: Prisma.SortOrder
   patient_id?: Prisma.SortOrder
@@ -373,8 +372,6 @@ export type AppointmentCountOrderByAggregateInput = {
 
 export type AppointmentAvgOrderByAggregateInput = {
   appointment_id?: Prisma.SortOrder
-  patient_id?: Prisma.SortOrder
-  doctor_id?: Prisma.SortOrder
 }
 
 export type AppointmentMaxOrderByAggregateInput = {
@@ -397,8 +394,6 @@ export type AppointmentMinOrderByAggregateInput = {
 
 export type AppointmentSumOrderByAggregateInput = {
   appointment_id?: Prisma.SortOrder
-  patient_id?: Prisma.SortOrder
-  doctor_id?: Prisma.SortOrder
 }
 
 export type AppointmentCreateNestedManyWithoutPatientInput = {
@@ -485,19 +480,23 @@ export type AppointmentUncheckedUpdateManyWithoutDoctorNestedInput = {
   deleteMany?: Prisma.AppointmentScalarWhereInput | Prisma.AppointmentScalarWhereInput[]
 }
 
+export type EnumAppointmentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.AppointmentStatus
+}
+
 export type AppointmentCreateWithoutPatientInput = {
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
   doctor: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
 }
 
 export type AppointmentUncheckedCreateWithoutPatientInput = {
   appointment_id?: number
-  doctor_id: number
+  doctor_id: string
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
 }
 
 export type AppointmentCreateOrConnectWithoutPatientInput = {
@@ -531,26 +530,26 @@ export type AppointmentScalarWhereInput = {
   OR?: Prisma.AppointmentScalarWhereInput[]
   NOT?: Prisma.AppointmentScalarWhereInput | Prisma.AppointmentScalarWhereInput[]
   appointment_id?: Prisma.IntFilter<"Appointment"> | number
-  patient_id?: Prisma.IntFilter<"Appointment"> | number
-  doctor_id?: Prisma.IntFilter<"Appointment"> | number
+  patient_id?: Prisma.StringFilter<"Appointment"> | string
+  doctor_id?: Prisma.StringFilter<"Appointment"> | string
   date?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   time?: Prisma.StringFilter<"Appointment"> | string
-  status?: Prisma.StringFilter<"Appointment"> | string
+  status?: Prisma.EnumAppointmentStatusFilter<"Appointment"> | $Enums.AppointmentStatus
 }
 
 export type AppointmentCreateWithoutDoctorInput = {
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
 }
 
 export type AppointmentUncheckedCreateWithoutDoctorInput = {
   appointment_id?: number
-  patient_id: number
+  patient_id: string
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
 }
 
 export type AppointmentCreateOrConnectWithoutDoctorInput = {
@@ -581,64 +580,64 @@ export type AppointmentUpdateManyWithWhereWithoutDoctorInput = {
 
 export type AppointmentCreateManyPatientInput = {
   appointment_id?: number
-  doctor_id: number
+  doctor_id: string
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
 }
 
 export type AppointmentUpdateWithoutPatientInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutAppointmentsNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutPatientInput = {
   appointment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
 }
 
 export type AppointmentUncheckedUpdateManyWithoutPatientInput = {
   appointment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  doctor_id?: Prisma.IntFieldUpdateOperationsInput | number
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
 }
 
 export type AppointmentCreateManyDoctorInput = {
   appointment_id?: number
-  patient_id: number
+  patient_id: string
   date: Date | string
   time: string
-  status: string
+  status: $Enums.AppointmentStatus
 }
 
 export type AppointmentUpdateWithoutDoctorInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
 }
 
 export type AppointmentUncheckedUpdateWithoutDoctorInput = {
   appointment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
 }
 
 export type AppointmentUncheckedUpdateManyWithoutDoctorInput = {
   appointment_id?: Prisma.IntFieldUpdateOperationsInput | number
-  patient_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   time?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
 }
 
 
@@ -679,11 +678,11 @@ export type $AppointmentPayload<ExtArgs extends runtime.Types.Extensions.Interna
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     appointment_id: number
-    patient_id: number
-    doctor_id: number
+    patient_id: string
+    doctor_id: string
     date: Date
     time: string
-    status: string
+    status: $Enums.AppointmentStatus
   }, ExtArgs["result"]["appointment"]>
   composites: {}
 }
@@ -1056,11 +1055,11 @@ export interface Prisma__AppointmentClient<T, Null = never, ExtArgs extends runt
  */
 export interface AppointmentFieldRefs {
   readonly appointment_id: Prisma.FieldRef<"Appointment", 'Int'>
-  readonly patient_id: Prisma.FieldRef<"Appointment", 'Int'>
-  readonly doctor_id: Prisma.FieldRef<"Appointment", 'Int'>
+  readonly patient_id: Prisma.FieldRef<"Appointment", 'String'>
+  readonly doctor_id: Prisma.FieldRef<"Appointment", 'String'>
   readonly date: Prisma.FieldRef<"Appointment", 'DateTime'>
   readonly time: Prisma.FieldRef<"Appointment", 'String'>
-  readonly status: Prisma.FieldRef<"Appointment", 'String'>
+  readonly status: Prisma.FieldRef<"Appointment", 'AppointmentStatus'>
 }
     
 
