@@ -63,7 +63,8 @@ export const ModelName = {
   TreatmentMedicine: 'TreatmentMedicine',
   Bill: 'Bill',
   BillTreatment: 'BillTreatment',
-  Login: 'Login'
+  Login: 'Login',
+  AccessLog: 'AccessLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -214,6 +215,18 @@ export const LoginScalarFieldEnum = {
 export type LoginScalarFieldEnum = (typeof LoginScalarFieldEnum)[keyof typeof LoginScalarFieldEnum]
 
 
+export const AccessLogScalarFieldEnum = {
+  access_id: 'access_id',
+  user_id: 'user_id',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  action: 'action',
+  access_time: 'access_time'
+} as const
+
+export type AccessLogScalarFieldEnum = (typeof AccessLogScalarFieldEnum)[keyof typeof AccessLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -320,4 +333,14 @@ export const LoginOrderByRelevanceFieldEnum = {
 } as const
 
 export type LoginOrderByRelevanceFieldEnum = (typeof LoginOrderByRelevanceFieldEnum)[keyof typeof LoginOrderByRelevanceFieldEnum]
+
+
+export const AccessLogOrderByRelevanceFieldEnum = {
+  user_id: 'user_id',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  action: 'action'
+} as const
+
+export type AccessLogOrderByRelevanceFieldEnum = (typeof AccessLogOrderByRelevanceFieldEnum)[keyof typeof AccessLogOrderByRelevanceFieldEnum]
 

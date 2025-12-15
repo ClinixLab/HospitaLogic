@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-/* ---------- types ---------- */
+/* ===================== Types ===================== */
 
 type AppointmentStatus =
   | "PENDING"
@@ -20,15 +20,18 @@ type Appointment = {
     specialty: {
       name: string;
     };
+    department: {
+      name: string;
+      location: string;
+    };
   };
 };
 
 type TabKey = "UPCOMING" | "PAST";
 
-/* ---------- helpers ---------- */
+/* ===================== Helpers ===================== */
 
 function toLocalDateNumber(dateStr: string) {
-  // "2025-12-15" => 20251215
   return parseInt(dateStr.replace(/-/g, ""), 10);
 }
 
@@ -39,7 +42,7 @@ const statusPriority: Record<AppointmentStatus, number> = {
   CANCELLED: 4,
 };
 
-/* ---------- component ---------- */
+/* ===================== Component ===================== */
 
 export default function AppointmentClient() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -54,7 +57,7 @@ export default function AppointmentClient() {
         const normalized: Appointment[] = (data.appointments ?? []).map(
           (a: any) => ({
             ...a,
-            status: (a.status ?? "").toUpperCase(),
+            status: String(a.status).toUpperCase(),
           })
         );
         setAppointments(normalized);
@@ -66,41 +69,33 @@ export default function AppointmentClient() {
       });
   }, []);
 
-  const todayNumber = toLocalDateNumber(new Date().toISOString().split("T")[0]);
+  const todayNumber = toLocalDateNumber(
+    new Date().toISOString().split("T")[0]
+  );
 
   const filteredAppointments = useMemo(() => {
     const sorted = [...appointments].sort((a, b) => {
       const da = toLocalDateNumber(a.date);
       const db = toLocalDateNumber(b.date);
-
-      if (db !== da) return db - da; // ใกล้ๆ วันนี้ก่อน
+      if (db !== da) return db - da;
       return statusPriority[a.status] - statusPriority[b.status];
     });
 
     if (activeTab === "UPCOMING") {
       return sorted.filter(a => {
         const dateNum = toLocalDateNumber(a.date);
-        const status = a.status.toUpperCase();
-
         return (
-          // ไม่เอา CANCELLED
-          status !== "CANCELLED" &&
-          // เอา appointment ที่ date >= today
-          dateNum >= todayNumber
+          dateNum >= todayNumber &&
+          (a.status === "PENDING" || a.status === "CONFIRMED")
         );
       });
     }
 
-    // PAST
     return sorted.filter(a => {
       const dateNum = toLocalDateNumber(a.date);
-      const status = a.status.toUpperCase();
-
       return (
-        // เอา CANCELLED หรือ COMPLETED
-        status === "CANCELLED" ||
-        status === "COMPLETED" ||
-        // หรือ date < today
+        a.status === "CANCELLED" ||
+        a.status === "COMPLETED" ||
         dateNum < todayNumber
       );
     });
@@ -111,9 +106,7 @@ export default function AppointmentClient() {
 
     setAppointments(prev =>
       prev.map(a =>
-        a.appointment_id === id
-          ? { ...a, status: "CANCELLED" }
-          : a
+        a.appointment_id === id ? { ...a, status: "CANCELLED" } : a
       )
     );
 
@@ -167,7 +160,7 @@ export default function AppointmentClient() {
   );
 }
 
-/* ---------- UI ---------- */
+/* ===================== UI ===================== */
 
 function Tab({
   label,
@@ -202,12 +195,20 @@ function AppointmentCard({
   onCancel: (id: number) => void;
 }) {
   return (
-    <div className="rounded-xl border p-4 flex justify-between items-center bg-white shadow-sm">
+    <div className="rounded-xl border p-4 flex justify-between bg-white shadow-sm">
       <div>
-        <p className="font-semibold text-lg">{appointment.doctor.name}</p>
+        <p className="font-semibold text-lg">
+          {appointment.doctor.name}
+        </p>
+
         <p className="text-sm text-slate-600">
           {appointment.doctor.specialty.name}
         </p>
+
+        <p className="text-sm text-slate-500">
+          📍 {appointment.doctor.department.location}
+        </p>
+
         <p className="text-sm mt-1 text-slate-700">
           📅 {appointment.date} · ⏰ {appointment.time}
         </p>
@@ -230,7 +231,7 @@ function AppointmentCard({
 }
 
 function StatusBadge({ status }: { status: AppointmentStatus }) {
-  const map = {
+  const map: Record<AppointmentStatus, string> = {
     PENDING: "bg-yellow-100 text-yellow-700",
     CONFIRMED: "bg-green-100 text-green-700",
     CANCELLED: "bg-red-100 text-red-700",
@@ -238,7 +239,9 @@ function StatusBadge({ status }: { status: AppointmentStatus }) {
   };
 
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-medium ${map[status]}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium ${map[status]}`}
+    >
       {status}
     </span>
   );

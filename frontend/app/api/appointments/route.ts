@@ -14,7 +14,6 @@ const CLINIC = {
   lunchEnd: "13:00",
 };
 
-// ✅ safer local date-only (กัน timezone เพี้ยน)
 function normalizeDateOnly(dateStr: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -47,7 +46,11 @@ function isClinicSlot(t: string) {
 }
 
 function sameLocalYMD(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 function isPastSlot(dateOnly: Date, timeHHmm: string) {
@@ -64,11 +67,8 @@ async function getAuthed() {
   if (!session?.user) return null;
 
   const u = session.user as any;
-
-  // ✅ รองรับทั้ง user_id และ id (กัน undefined)
   const rawId = u?.user_id ?? u?.id;
   const uid = rawId ? parseUuid(String(rawId)) : null;
-
   const role = String(u?.role ?? "").toUpperCase();
 
   if (!uid || !role) return null;
@@ -79,10 +79,12 @@ async function getAuthed() {
 
 export async function GET() {
   const auth = await getAuthed();
-  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  if (!auth)
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   const { uid, role } = auth;
 
+  /* ---------- PATIENT ---------- */
   if (role === "PATIENT") {
     const appointments = await prisma.appointment.findMany({
       where: { patient_id: uid },
@@ -92,11 +94,19 @@ export async function GET() {
         date: true,
         time: true,
         status: true,
-        symptom: true, // ✅ ส่งกลับ symptom
+        symptom: true,
         doctor: {
           select: {
             name: true,
-            specialty: { select: { name: true } },
+            specialty: {
+              select: { name: true },
+            },
+            department: {
+              select: {
+                name: true,
+                location: true, // ✅ สำคัญ (ใช้ในหน้า appointment)
+              },
+            },
           },
         },
       },
@@ -105,6 +115,7 @@ export async function GET() {
     return NextResponse.json({ appointments });
   }
 
+  /* ---------- DOCTOR ---------- */
   if (role === "DOCTOR") {
     const appointments = await prisma.appointment.findMany({
       where: { doctor_id: uid },
@@ -114,9 +125,12 @@ export async function GET() {
         date: true,
         time: true,
         status: true,
-        symptom: true, // ✅ ส่งกลับ symptom
+        symptom: true,
         patient: {
-          select: { name: true, phone: true },
+          select: {
+            name: true,
+            phone: true,
+          },
         },
       },
     });
@@ -131,30 +145,40 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const auth = await getAuthed();
-  if (!auth) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  if (!auth)
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   const { uid: patient_id, role } = auth;
-  if (role !== "PATIENT") return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+  if (role !== "PATIENT")
+    return NextResponse.json({ message: "Forbidden" }, { status: 403 });
 
   const body = await req.json().catch(() => ({}));
 
   const doctor_id = parseUuid(body.doctor_id);
   const date = normalizeDateOnly(String(body.date ?? ""));
   const time = String(body.time ?? "");
-  // ✅ รับได้ทั้ง symptom/symptoms กันพลาดสะกด
   const symptom = String(body.symptom ?? body.symptoms ?? "").trim();
 
   if (!doctor_id || !date || !symptom) {
     return NextResponse.json({ message: "Invalid input" }, { status: 400 });
   }
 
-  if (!isValidTimeHHmm_30min(time) || !isClinicSlot(time) || isPastSlot(date, time)) {
-    return NextResponse.json({ message: "Invalid time slot" }, { status: 400 });
+  if (
+    !isValidTimeHHmm_30min(time) ||
+    !isClinicSlot(time) ||
+    isPastSlot(date, time)
+  ) {
+    return NextResponse.json(
+      { message: "Invalid time slot" },
+      { status: 400 }
+    );
   }
 
-  // (optional) จำกัดความยาวกัน text ยาวเกิน
   if (symptom.length > 2000) {
-    return NextResponse.json({ message: "symptom too long" }, { status: 400 });
+    return NextResponse.json(
+      { message: "symptom too long" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -165,7 +189,7 @@ export async function POST(req: Request) {
         date,
         time,
         status: "PENDING",
-        symptom, // ✅ บันทึกลง DB
+        symptom,
       },
       select: {
         appointment_id: true,
@@ -178,11 +202,20 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ appointment }, { status: 201 });
   } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
-      return NextResponse.json({ message: "Timeslot already booked" }, { status: 409 });
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2002"
+    ) {
+      return NextResponse.json(
+        { message: "Timeslot already booked" },
+        { status: 409 }
+      );
     }
 
     console.error("POST /api/appointments error:", err);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
