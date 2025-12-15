@@ -121,8 +121,8 @@ export default function NewAppointmentPage() {
           credentials: "include",
         });
         if (res.status === 401) return router.push("/login");
-        const data = await res.json();
 
+        const data = await res.json().catch(() => ({}));
         const fetched: Slot[] = data.slots ?? [];
 
         const today = todayYMDLocal();
@@ -156,13 +156,15 @@ export default function NewAppointmentPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          symptoms,
+          // ✅ เชื่อมกับ schema: Appointment.symptom
+          symptom: symptoms,
+
+          // (optional) เผื่อ API เก่าที่รับ symptoms
+          // symptoms,
+
           doctor_id: doctorId,
           date,
           time,
-          // ✅ ไม่ต้องส่ง specialty_id แล้ว “แนะนำให้แก้ POST /api/appointments ให้ไม่ require specialty_id”
-          // ถ้าคุณยัง require อยู่: ส่งเพิ่มได้แบบนี้
-          // specialty_id: selectedDoctor?.specialty?.specialty_id,
         }),
       });
 

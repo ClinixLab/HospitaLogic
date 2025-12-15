@@ -145,12 +145,6 @@ export default async function Home() {
                 desc="ดูรายชื่อแพทย์ตาม Department/Specialty"
                 icon={<span className="text-xl">🔎</span>}
               />
-              <Card
-                href="/access-log"
-                title="ประวัติการใช้งาน"
-                desc="ดู log การเข้าถึงและการล็อกอิน"
-                icon={<span className="text-xl">🧩</span>}
-              />
             </>
           )}
 
@@ -177,22 +171,10 @@ export default async function Home() {
               />
 
               <Card
-                href="/treatments"
-                title="ใส่ Treatment + ออกบิล"
-                desc="เลือก Diagnosis • ใส่ยา • สร้าง Bill ส่งกลับคนไข้"
-                icon={<span className="text-xl">🩺</span>}
-              />
-              <Card
                 href="/medicines"
                 title="รายการยา"
                 desc="ดูข้อมูลยาและราคา"
                 icon={<span className="text-xl">💊</span>}
-              />
-              <Card
-                href="/access-log"
-                title="ประวัติการใช้งาน"
-                desc="ดู log การเข้าถึงและการล็อกอิน"
-                icon={<span className="text-xl">🧩</span>}
               />
             </>
           )}

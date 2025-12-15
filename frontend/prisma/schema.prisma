@@ -39,6 +39,7 @@ model Diagnosis {
   code         String
   description  String
   treatments   Treatment[]
+  accessLogs AccessLog[]
 }
 
 model Department {
@@ -110,10 +111,10 @@ model Treatment {
 
   medicines      TreatmentMedicine[]
   billTreatments BillTreatment[]
-
   patient   Patient   @relation(fields: [patient_id], references: [patient_id])
   doctor    Doctor    @relation(fields: [doctor_id], references: [doctor_id])
   diagnosis Diagnosis @relation(fields: [diagnosis_id], references: [diagnosis_id])
+  accessLogs AccessLog[]
 }
 
 model Medicine {
@@ -169,15 +170,24 @@ model Login {
   patient    Patient?
   doctor     Doctor?
   accessLogs AccessLog[]
+
 }
 
 model AccessLog {
   access_id   Int      @id @default(autoincrement())
   user_id     String   @db.Char(36)
+
   entity_type String
-  entity_id   String   @db.VarChar(64) // ถ้า entity_id เคยเก็บ int ก็ยังเก็บเป็น string ได้
+  entity_id   String   @db.VarChar(64)
   action      String
   access_time DateTime @default(now())
+  treatment_id Int?
+  diagnosis_id Int?
+  user      Login     @relation(fields: [user_id], references: [user_id])
+  treatment Treatment? @relation(fields: [treatment_id], references: [treatment_id])
+  diagnosis Diagnosis? @relation(fields: [diagnosis_id], references: [diagnosis_id])
 
-  user Login @relation(fields: [user_id], references: [user_id])
+  @@index([user_id, access_time])
+  @@index([treatment_id])
+  @@index([diagnosis_id])
 }

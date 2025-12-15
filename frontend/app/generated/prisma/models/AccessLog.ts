@@ -28,10 +28,14 @@ export type AggregateAccessLog = {
 
 export type AccessLogAvgAggregateOutputType = {
   access_id: number | null
+  treatment_id: number | null
+  diagnosis_id: number | null
 }
 
 export type AccessLogSumAggregateOutputType = {
   access_id: number | null
+  treatment_id: number | null
+  diagnosis_id: number | null
 }
 
 export type AccessLogMinAggregateOutputType = {
@@ -41,6 +45,8 @@ export type AccessLogMinAggregateOutputType = {
   entity_id: string | null
   action: string | null
   access_time: Date | null
+  treatment_id: number | null
+  diagnosis_id: number | null
 }
 
 export type AccessLogMaxAggregateOutputType = {
@@ -50,6 +56,8 @@ export type AccessLogMaxAggregateOutputType = {
   entity_id: string | null
   action: string | null
   access_time: Date | null
+  treatment_id: number | null
+  diagnosis_id: number | null
 }
 
 export type AccessLogCountAggregateOutputType = {
@@ -59,16 +67,22 @@ export type AccessLogCountAggregateOutputType = {
   entity_id: number
   action: number
   access_time: number
+  treatment_id: number
+  diagnosis_id: number
   _all: number
 }
 
 
 export type AccessLogAvgAggregateInputType = {
   access_id?: true
+  treatment_id?: true
+  diagnosis_id?: true
 }
 
 export type AccessLogSumAggregateInputType = {
   access_id?: true
+  treatment_id?: true
+  diagnosis_id?: true
 }
 
 export type AccessLogMinAggregateInputType = {
@@ -78,6 +92,8 @@ export type AccessLogMinAggregateInputType = {
   entity_id?: true
   action?: true
   access_time?: true
+  treatment_id?: true
+  diagnosis_id?: true
 }
 
 export type AccessLogMaxAggregateInputType = {
@@ -87,6 +103,8 @@ export type AccessLogMaxAggregateInputType = {
   entity_id?: true
   action?: true
   access_time?: true
+  treatment_id?: true
+  diagnosis_id?: true
 }
 
 export type AccessLogCountAggregateInputType = {
@@ -96,6 +114,8 @@ export type AccessLogCountAggregateInputType = {
   entity_id?: true
   action?: true
   access_time?: true
+  treatment_id?: true
+  diagnosis_id?: true
   _all?: true
 }
 
@@ -192,6 +212,8 @@ export type AccessLogGroupByOutputType = {
   entity_id: string
   action: string
   access_time: Date
+  treatment_id: number | null
+  diagnosis_id: number | null
   _count: AccessLogCountAggregateOutputType | null
   _avg: AccessLogAvgAggregateOutputType | null
   _sum: AccessLogSumAggregateOutputType | null
@@ -224,7 +246,11 @@ export type AccessLogWhereInput = {
   entity_id?: Prisma.StringFilter<"AccessLog"> | string
   action?: Prisma.StringFilter<"AccessLog"> | string
   access_time?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
+  treatment_id?: Prisma.IntNullableFilter<"AccessLog"> | number | null
+  diagnosis_id?: Prisma.IntNullableFilter<"AccessLog"> | number | null
   user?: Prisma.XOR<Prisma.LoginScalarRelationFilter, Prisma.LoginWhereInput>
+  treatment?: Prisma.XOR<Prisma.TreatmentNullableScalarRelationFilter, Prisma.TreatmentWhereInput> | null
+  diagnosis?: Prisma.XOR<Prisma.DiagnosisNullableScalarRelationFilter, Prisma.DiagnosisWhereInput> | null
 }
 
 export type AccessLogOrderByWithRelationInput = {
@@ -234,7 +260,11 @@ export type AccessLogOrderByWithRelationInput = {
   entity_id?: Prisma.SortOrder
   action?: Prisma.SortOrder
   access_time?: Prisma.SortOrder
+  treatment_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  diagnosis_id?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.LoginOrderByWithRelationInput
+  treatment?: Prisma.TreatmentOrderByWithRelationInput
+  diagnosis?: Prisma.DiagnosisOrderByWithRelationInput
   _relevance?: Prisma.AccessLogOrderByRelevanceInput
 }
 
@@ -248,7 +278,11 @@ export type AccessLogWhereUniqueInput = Prisma.AtLeast<{
   entity_id?: Prisma.StringFilter<"AccessLog"> | string
   action?: Prisma.StringFilter<"AccessLog"> | string
   access_time?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
+  treatment_id?: Prisma.IntNullableFilter<"AccessLog"> | number | null
+  diagnosis_id?: Prisma.IntNullableFilter<"AccessLog"> | number | null
   user?: Prisma.XOR<Prisma.LoginScalarRelationFilter, Prisma.LoginWhereInput>
+  treatment?: Prisma.XOR<Prisma.TreatmentNullableScalarRelationFilter, Prisma.TreatmentWhereInput> | null
+  diagnosis?: Prisma.XOR<Prisma.DiagnosisNullableScalarRelationFilter, Prisma.DiagnosisWhereInput> | null
 }, "access_id">
 
 export type AccessLogOrderByWithAggregationInput = {
@@ -258,6 +292,8 @@ export type AccessLogOrderByWithAggregationInput = {
   entity_id?: Prisma.SortOrder
   action?: Prisma.SortOrder
   access_time?: Prisma.SortOrder
+  treatment_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  diagnosis_id?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AccessLogCountOrderByAggregateInput
   _avg?: Prisma.AccessLogAvgOrderByAggregateInput
   _max?: Prisma.AccessLogMaxOrderByAggregateInput
@@ -275,6 +311,8 @@ export type AccessLogScalarWhereWithAggregatesInput = {
   entity_id?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
   action?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
   access_time?: Prisma.DateTimeWithAggregatesFilter<"AccessLog"> | Date | string
+  treatment_id?: Prisma.IntNullableWithAggregatesFilter<"AccessLog"> | number | null
+  diagnosis_id?: Prisma.IntNullableWithAggregatesFilter<"AccessLog"> | number | null
 }
 
 export type AccessLogCreateInput = {
@@ -283,6 +321,8 @@ export type AccessLogCreateInput = {
   action: string
   access_time?: Date | string
   user: Prisma.LoginCreateNestedOneWithoutAccessLogsInput
+  treatment?: Prisma.TreatmentCreateNestedOneWithoutAccessLogsInput
+  diagnosis?: Prisma.DiagnosisCreateNestedOneWithoutAccessLogsInput
 }
 
 export type AccessLogUncheckedCreateInput = {
@@ -292,6 +332,8 @@ export type AccessLogUncheckedCreateInput = {
   entity_id: string
   action: string
   access_time?: Date | string
+  treatment_id?: number | null
+  diagnosis_id?: number | null
 }
 
 export type AccessLogUpdateInput = {
@@ -300,6 +342,8 @@ export type AccessLogUpdateInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.LoginUpdateOneRequiredWithoutAccessLogsNestedInput
+  treatment?: Prisma.TreatmentUpdateOneWithoutAccessLogsNestedInput
+  diagnosis?: Prisma.DiagnosisUpdateOneWithoutAccessLogsNestedInput
 }
 
 export type AccessLogUncheckedUpdateInput = {
@@ -309,6 +353,8 @@ export type AccessLogUncheckedUpdateInput = {
   entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  diagnosis_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AccessLogCreateManyInput = {
@@ -318,6 +364,8 @@ export type AccessLogCreateManyInput = {
   entity_id: string
   action: string
   access_time?: Date | string
+  treatment_id?: number | null
+  diagnosis_id?: number | null
 }
 
 export type AccessLogUpdateManyMutationInput = {
@@ -334,6 +382,8 @@ export type AccessLogUncheckedUpdateManyInput = {
   entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  diagnosis_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AccessLogListRelationFilter = {
@@ -359,10 +409,14 @@ export type AccessLogCountOrderByAggregateInput = {
   entity_id?: Prisma.SortOrder
   action?: Prisma.SortOrder
   access_time?: Prisma.SortOrder
+  treatment_id?: Prisma.SortOrder
+  diagnosis_id?: Prisma.SortOrder
 }
 
 export type AccessLogAvgOrderByAggregateInput = {
   access_id?: Prisma.SortOrder
+  treatment_id?: Prisma.SortOrder
+  diagnosis_id?: Prisma.SortOrder
 }
 
 export type AccessLogMaxOrderByAggregateInput = {
@@ -372,6 +426,8 @@ export type AccessLogMaxOrderByAggregateInput = {
   entity_id?: Prisma.SortOrder
   action?: Prisma.SortOrder
   access_time?: Prisma.SortOrder
+  treatment_id?: Prisma.SortOrder
+  diagnosis_id?: Prisma.SortOrder
 }
 
 export type AccessLogMinOrderByAggregateInput = {
@@ -381,10 +437,98 @@ export type AccessLogMinOrderByAggregateInput = {
   entity_id?: Prisma.SortOrder
   action?: Prisma.SortOrder
   access_time?: Prisma.SortOrder
+  treatment_id?: Prisma.SortOrder
+  diagnosis_id?: Prisma.SortOrder
 }
 
 export type AccessLogSumOrderByAggregateInput = {
   access_id?: Prisma.SortOrder
+  treatment_id?: Prisma.SortOrder
+  diagnosis_id?: Prisma.SortOrder
+}
+
+export type AccessLogCreateNestedManyWithoutDiagnosisInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutDiagnosisInput, Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput> | Prisma.AccessLogCreateWithoutDiagnosisInput[] | Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput | Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput[]
+  createMany?: Prisma.AccessLogCreateManyDiagnosisInputEnvelope
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+}
+
+export type AccessLogUncheckedCreateNestedManyWithoutDiagnosisInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutDiagnosisInput, Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput> | Prisma.AccessLogCreateWithoutDiagnosisInput[] | Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput | Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput[]
+  createMany?: Prisma.AccessLogCreateManyDiagnosisInputEnvelope
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+}
+
+export type AccessLogUpdateManyWithoutDiagnosisNestedInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutDiagnosisInput, Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput> | Prisma.AccessLogCreateWithoutDiagnosisInput[] | Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput | Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput[]
+  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutDiagnosisInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutDiagnosisInput[]
+  createMany?: Prisma.AccessLogCreateManyDiagnosisInputEnvelope
+  set?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  disconnect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  delete?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutDiagnosisInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutDiagnosisInput[]
+  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutDiagnosisInput | Prisma.AccessLogUpdateManyWithWhereWithoutDiagnosisInput[]
+  deleteMany?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
+}
+
+export type AccessLogUncheckedUpdateManyWithoutDiagnosisNestedInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutDiagnosisInput, Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput> | Prisma.AccessLogCreateWithoutDiagnosisInput[] | Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput | Prisma.AccessLogCreateOrConnectWithoutDiagnosisInput[]
+  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutDiagnosisInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutDiagnosisInput[]
+  createMany?: Prisma.AccessLogCreateManyDiagnosisInputEnvelope
+  set?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  disconnect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  delete?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutDiagnosisInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutDiagnosisInput[]
+  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutDiagnosisInput | Prisma.AccessLogUpdateManyWithWhereWithoutDiagnosisInput[]
+  deleteMany?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
+}
+
+export type AccessLogCreateNestedManyWithoutTreatmentInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutTreatmentInput, Prisma.AccessLogUncheckedCreateWithoutTreatmentInput> | Prisma.AccessLogCreateWithoutTreatmentInput[] | Prisma.AccessLogUncheckedCreateWithoutTreatmentInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutTreatmentInput | Prisma.AccessLogCreateOrConnectWithoutTreatmentInput[]
+  createMany?: Prisma.AccessLogCreateManyTreatmentInputEnvelope
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+}
+
+export type AccessLogUncheckedCreateNestedManyWithoutTreatmentInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutTreatmentInput, Prisma.AccessLogUncheckedCreateWithoutTreatmentInput> | Prisma.AccessLogCreateWithoutTreatmentInput[] | Prisma.AccessLogUncheckedCreateWithoutTreatmentInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutTreatmentInput | Prisma.AccessLogCreateOrConnectWithoutTreatmentInput[]
+  createMany?: Prisma.AccessLogCreateManyTreatmentInputEnvelope
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+}
+
+export type AccessLogUpdateManyWithoutTreatmentNestedInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutTreatmentInput, Prisma.AccessLogUncheckedCreateWithoutTreatmentInput> | Prisma.AccessLogCreateWithoutTreatmentInput[] | Prisma.AccessLogUncheckedCreateWithoutTreatmentInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutTreatmentInput | Prisma.AccessLogCreateOrConnectWithoutTreatmentInput[]
+  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutTreatmentInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutTreatmentInput[]
+  createMany?: Prisma.AccessLogCreateManyTreatmentInputEnvelope
+  set?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  disconnect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  delete?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutTreatmentInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutTreatmentInput[]
+  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutTreatmentInput | Prisma.AccessLogUpdateManyWithWhereWithoutTreatmentInput[]
+  deleteMany?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
+}
+
+export type AccessLogUncheckedUpdateManyWithoutTreatmentNestedInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutTreatmentInput, Prisma.AccessLogUncheckedCreateWithoutTreatmentInput> | Prisma.AccessLogCreateWithoutTreatmentInput[] | Prisma.AccessLogUncheckedCreateWithoutTreatmentInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutTreatmentInput | Prisma.AccessLogCreateOrConnectWithoutTreatmentInput[]
+  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutTreatmentInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutTreatmentInput[]
+  createMany?: Prisma.AccessLogCreateManyTreatmentInputEnvelope
+  set?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  disconnect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  delete?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
+  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutTreatmentInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutTreatmentInput[]
+  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutTreatmentInput | Prisma.AccessLogUpdateManyWithWhereWithoutTreatmentInput[]
+  deleteMany?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
 }
 
 export type AccessLogCreateNestedManyWithoutUserInput = {
@@ -429,11 +573,117 @@ export type AccessLogUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
 }
 
+export type AccessLogCreateWithoutDiagnosisInput = {
+  entity_type: string
+  entity_id: string
+  action: string
+  access_time?: Date | string
+  user: Prisma.LoginCreateNestedOneWithoutAccessLogsInput
+  treatment?: Prisma.TreatmentCreateNestedOneWithoutAccessLogsInput
+}
+
+export type AccessLogUncheckedCreateWithoutDiagnosisInput = {
+  access_id?: number
+  user_id: string
+  entity_type: string
+  entity_id: string
+  action: string
+  access_time?: Date | string
+  treatment_id?: number | null
+}
+
+export type AccessLogCreateOrConnectWithoutDiagnosisInput = {
+  where: Prisma.AccessLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AccessLogCreateWithoutDiagnosisInput, Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput>
+}
+
+export type AccessLogCreateManyDiagnosisInputEnvelope = {
+  data: Prisma.AccessLogCreateManyDiagnosisInput | Prisma.AccessLogCreateManyDiagnosisInput[]
+  skipDuplicates?: boolean
+}
+
+export type AccessLogUpsertWithWhereUniqueWithoutDiagnosisInput = {
+  where: Prisma.AccessLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AccessLogUpdateWithoutDiagnosisInput, Prisma.AccessLogUncheckedUpdateWithoutDiagnosisInput>
+  create: Prisma.XOR<Prisma.AccessLogCreateWithoutDiagnosisInput, Prisma.AccessLogUncheckedCreateWithoutDiagnosisInput>
+}
+
+export type AccessLogUpdateWithWhereUniqueWithoutDiagnosisInput = {
+  where: Prisma.AccessLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AccessLogUpdateWithoutDiagnosisInput, Prisma.AccessLogUncheckedUpdateWithoutDiagnosisInput>
+}
+
+export type AccessLogUpdateManyWithWhereWithoutDiagnosisInput = {
+  where: Prisma.AccessLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AccessLogUpdateManyMutationInput, Prisma.AccessLogUncheckedUpdateManyWithoutDiagnosisInput>
+}
+
+export type AccessLogScalarWhereInput = {
+  AND?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
+  OR?: Prisma.AccessLogScalarWhereInput[]
+  NOT?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
+  access_id?: Prisma.IntFilter<"AccessLog"> | number
+  user_id?: Prisma.StringFilter<"AccessLog"> | string
+  entity_type?: Prisma.StringFilter<"AccessLog"> | string
+  entity_id?: Prisma.StringFilter<"AccessLog"> | string
+  action?: Prisma.StringFilter<"AccessLog"> | string
+  access_time?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
+  treatment_id?: Prisma.IntNullableFilter<"AccessLog"> | number | null
+  diagnosis_id?: Prisma.IntNullableFilter<"AccessLog"> | number | null
+}
+
+export type AccessLogCreateWithoutTreatmentInput = {
+  entity_type: string
+  entity_id: string
+  action: string
+  access_time?: Date | string
+  user: Prisma.LoginCreateNestedOneWithoutAccessLogsInput
+  diagnosis?: Prisma.DiagnosisCreateNestedOneWithoutAccessLogsInput
+}
+
+export type AccessLogUncheckedCreateWithoutTreatmentInput = {
+  access_id?: number
+  user_id: string
+  entity_type: string
+  entity_id: string
+  action: string
+  access_time?: Date | string
+  diagnosis_id?: number | null
+}
+
+export type AccessLogCreateOrConnectWithoutTreatmentInput = {
+  where: Prisma.AccessLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.AccessLogCreateWithoutTreatmentInput, Prisma.AccessLogUncheckedCreateWithoutTreatmentInput>
+}
+
+export type AccessLogCreateManyTreatmentInputEnvelope = {
+  data: Prisma.AccessLogCreateManyTreatmentInput | Prisma.AccessLogCreateManyTreatmentInput[]
+  skipDuplicates?: boolean
+}
+
+export type AccessLogUpsertWithWhereUniqueWithoutTreatmentInput = {
+  where: Prisma.AccessLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.AccessLogUpdateWithoutTreatmentInput, Prisma.AccessLogUncheckedUpdateWithoutTreatmentInput>
+  create: Prisma.XOR<Prisma.AccessLogCreateWithoutTreatmentInput, Prisma.AccessLogUncheckedCreateWithoutTreatmentInput>
+}
+
+export type AccessLogUpdateWithWhereUniqueWithoutTreatmentInput = {
+  where: Prisma.AccessLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.AccessLogUpdateWithoutTreatmentInput, Prisma.AccessLogUncheckedUpdateWithoutTreatmentInput>
+}
+
+export type AccessLogUpdateManyWithWhereWithoutTreatmentInput = {
+  where: Prisma.AccessLogScalarWhereInput
+  data: Prisma.XOR<Prisma.AccessLogUpdateManyMutationInput, Prisma.AccessLogUncheckedUpdateManyWithoutTreatmentInput>
+}
+
 export type AccessLogCreateWithoutUserInput = {
   entity_type: string
   entity_id: string
   action: string
   access_time?: Date | string
+  treatment?: Prisma.TreatmentCreateNestedOneWithoutAccessLogsInput
+  diagnosis?: Prisma.DiagnosisCreateNestedOneWithoutAccessLogsInput
 }
 
 export type AccessLogUncheckedCreateWithoutUserInput = {
@@ -442,6 +692,8 @@ export type AccessLogUncheckedCreateWithoutUserInput = {
   entity_id: string
   action: string
   access_time?: Date | string
+  treatment_id?: number | null
+  diagnosis_id?: number | null
 }
 
 export type AccessLogCreateOrConnectWithoutUserInput = {
@@ -470,16 +722,82 @@ export type AccessLogUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.AccessLogUpdateManyMutationInput, Prisma.AccessLogUncheckedUpdateManyWithoutUserInput>
 }
 
-export type AccessLogScalarWhereInput = {
-  AND?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
-  OR?: Prisma.AccessLogScalarWhereInput[]
-  NOT?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
-  access_id?: Prisma.IntFilter<"AccessLog"> | number
-  user_id?: Prisma.StringFilter<"AccessLog"> | string
-  entity_type?: Prisma.StringFilter<"AccessLog"> | string
-  entity_id?: Prisma.StringFilter<"AccessLog"> | string
-  action?: Prisma.StringFilter<"AccessLog"> | string
-  access_time?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
+export type AccessLogCreateManyDiagnosisInput = {
+  access_id?: number
+  user_id: string
+  entity_type: string
+  entity_id: string
+  action: string
+  access_time?: Date | string
+  treatment_id?: number | null
+}
+
+export type AccessLogUpdateWithoutDiagnosisInput = {
+  entity_type?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.LoginUpdateOneRequiredWithoutAccessLogsNestedInput
+  treatment?: Prisma.TreatmentUpdateOneWithoutAccessLogsNestedInput
+}
+
+export type AccessLogUncheckedUpdateWithoutDiagnosisInput = {
+  access_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_type?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AccessLogUncheckedUpdateManyWithoutDiagnosisInput = {
+  access_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_type?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AccessLogCreateManyTreatmentInput = {
+  access_id?: number
+  user_id: string
+  entity_type: string
+  entity_id: string
+  action: string
+  access_time?: Date | string
+  diagnosis_id?: number | null
+}
+
+export type AccessLogUpdateWithoutTreatmentInput = {
+  entity_type?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.LoginUpdateOneRequiredWithoutAccessLogsNestedInput
+  diagnosis?: Prisma.DiagnosisUpdateOneWithoutAccessLogsNestedInput
+}
+
+export type AccessLogUncheckedUpdateWithoutTreatmentInput = {
+  access_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_type?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diagnosis_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type AccessLogUncheckedUpdateManyWithoutTreatmentInput = {
+  access_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_type?: Prisma.StringFieldUpdateOperationsInput | string
+  entity_id?: Prisma.StringFieldUpdateOperationsInput | string
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diagnosis_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AccessLogCreateManyUserInput = {
@@ -488,6 +806,8 @@ export type AccessLogCreateManyUserInput = {
   entity_id: string
   action: string
   access_time?: Date | string
+  treatment_id?: number | null
+  diagnosis_id?: number | null
 }
 
 export type AccessLogUpdateWithoutUserInput = {
@@ -495,6 +815,8 @@ export type AccessLogUpdateWithoutUserInput = {
   entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatment?: Prisma.TreatmentUpdateOneWithoutAccessLogsNestedInput
+  diagnosis?: Prisma.DiagnosisUpdateOneWithoutAccessLogsNestedInput
 }
 
 export type AccessLogUncheckedUpdateWithoutUserInput = {
@@ -503,6 +825,8 @@ export type AccessLogUncheckedUpdateWithoutUserInput = {
   entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  diagnosis_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AccessLogUncheckedUpdateManyWithoutUserInput = {
@@ -511,6 +835,8 @@ export type AccessLogUncheckedUpdateManyWithoutUserInput = {
   entity_id?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   access_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatment_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  diagnosis_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -522,7 +848,11 @@ export type AccessLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   entity_id?: boolean
   action?: boolean
   access_time?: boolean
+  treatment_id?: boolean
+  diagnosis_id?: boolean
   user?: boolean | Prisma.LoginDefaultArgs<ExtArgs>
+  treatment?: boolean | Prisma.AccessLog$treatmentArgs<ExtArgs>
+  diagnosis?: boolean | Prisma.AccessLog$diagnosisArgs<ExtArgs>
 }, ExtArgs["result"]["accessLog"]>
 
 
@@ -534,17 +864,23 @@ export type AccessLogSelectScalar = {
   entity_id?: boolean
   action?: boolean
   access_time?: boolean
+  treatment_id?: boolean
+  diagnosis_id?: boolean
 }
 
-export type AccessLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"access_id" | "user_id" | "entity_type" | "entity_id" | "action" | "access_time", ExtArgs["result"]["accessLog"]>
+export type AccessLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"access_id" | "user_id" | "entity_type" | "entity_id" | "action" | "access_time" | "treatment_id" | "diagnosis_id", ExtArgs["result"]["accessLog"]>
 export type AccessLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.LoginDefaultArgs<ExtArgs>
+  treatment?: boolean | Prisma.AccessLog$treatmentArgs<ExtArgs>
+  diagnosis?: boolean | Prisma.AccessLog$diagnosisArgs<ExtArgs>
 }
 
 export type $AccessLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AccessLog"
   objects: {
     user: Prisma.$LoginPayload<ExtArgs>
+    treatment: Prisma.$TreatmentPayload<ExtArgs> | null
+    diagnosis: Prisma.$DiagnosisPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     access_id: number
@@ -553,6 +889,8 @@ export type $AccessLogPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     entity_id: string
     action: string
     access_time: Date
+    treatment_id: number | null
+    diagnosis_id: number | null
   }, ExtArgs["result"]["accessLog"]>
   composites: {}
 }
@@ -894,6 +1232,8 @@ readonly fields: AccessLogFieldRefs;
 export interface Prisma__AccessLogClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.LoginDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LoginDefaultArgs<ExtArgs>>): Prisma.Prisma__LoginClient<runtime.Types.Result.GetResult<Prisma.$LoginPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  treatment<T extends Prisma.AccessLog$treatmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccessLog$treatmentArgs<ExtArgs>>): Prisma.Prisma__TreatmentClient<runtime.Types.Result.GetResult<Prisma.$TreatmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  diagnosis<T extends Prisma.AccessLog$diagnosisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccessLog$diagnosisArgs<ExtArgs>>): Prisma.Prisma__DiagnosisClient<runtime.Types.Result.GetResult<Prisma.$DiagnosisPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -929,6 +1269,8 @@ export interface AccessLogFieldRefs {
   readonly entity_id: Prisma.FieldRef<"AccessLog", 'String'>
   readonly action: Prisma.FieldRef<"AccessLog", 'String'>
   readonly access_time: Prisma.FieldRef<"AccessLog", 'DateTime'>
+  readonly treatment_id: Prisma.FieldRef<"AccessLog", 'Int'>
+  readonly diagnosis_id: Prisma.FieldRef<"AccessLog", 'Int'>
 }
     
 
@@ -1269,6 +1611,44 @@ export type AccessLogDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many AccessLogs to delete.
    */
   limit?: number
+}
+
+/**
+ * AccessLog.treatment
+ */
+export type AccessLog$treatmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Treatment
+   */
+  select?: Prisma.TreatmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Treatment
+   */
+  omit?: Prisma.TreatmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TreatmentInclude<ExtArgs> | null
+  where?: Prisma.TreatmentWhereInput
+}
+
+/**
+ * AccessLog.diagnosis
+ */
+export type AccessLog$diagnosisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Diagnosis
+   */
+  select?: Prisma.DiagnosisSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Diagnosis
+   */
+  omit?: Prisma.DiagnosisOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DiagnosisInclude<ExtArgs> | null
+  where?: Prisma.DiagnosisWhereInput
 }
 
 /**
