@@ -168,16 +168,4 @@ model Login {
 
   patient    Patient?
   doctor     Doctor?
-  accessLogs AccessLog[]
-}
-
-model AccessLog {
-  access_id   Int      @id @default(autoincrement())
-  user_id     String   @db.Char(36)
-  entity_type String
-  entity_id   String   @db.VarChar(64) // ถ้า entity_id เคยเก็บ int ก็ยังเก็บเป็น string ได้
-  action      String
-  access_time DateTime @default(now())
-
-  user Login @relation(fields: [user_id], references: [user_id])
 }

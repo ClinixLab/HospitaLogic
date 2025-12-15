@@ -29,12 +29,8 @@ export default function Navbar() {
     : role === "DOCTOR"
     ? [
         { href: "/", label: "หน้าแรก" },
-        { href: "/doctor/requests", label: "คำขอนัดหมาย" },
-        { href: "/doctor/confirmed", label: "นัดที่ยืนยันแล้ว" },
-        { href: "/doctor/treatments", label: "Treatment/ออกบิล" },
         { href: "/doctors", label: "รายชื่อแพทย์" },
         { href: "/medicines", label: "รายการยา" },
-        { href: "/access-log", label: "ประวัติการใช้งาน" },
         { href: "/settings", label: "ตั้งค่า" }, 
       ]
     : [
@@ -42,7 +38,6 @@ export default function Navbar() {
         { href: "/appointments/new", label: "จองนัด" },
         { href: "/doctors", label: "รายชื่อแพทย์" },
         { href: "/bills", label: "บิล/การชำระเงิน" },
-        { href: "/access-log", label: "ประวัติการใช้งาน" },
          { href: "/settings", label: "ตั้งค่า" }, 
       ];
 

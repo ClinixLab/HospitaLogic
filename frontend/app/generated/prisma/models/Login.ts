@@ -176,7 +176,6 @@ export type LoginWhereInput = {
   role?: Prisma.EnumRoleFilter<"Login"> | $Enums.Role
   patient?: Prisma.XOR<Prisma.PatientNullableScalarRelationFilter, Prisma.PatientWhereInput> | null
   doctor?: Prisma.XOR<Prisma.DoctorNullableScalarRelationFilter, Prisma.DoctorWhereInput> | null
-  accessLogs?: Prisma.AccessLogListRelationFilter
 }
 
 export type LoginOrderByWithRelationInput = {
@@ -186,7 +185,6 @@ export type LoginOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   patient?: Prisma.PatientOrderByWithRelationInput
   doctor?: Prisma.DoctorOrderByWithRelationInput
-  accessLogs?: Prisma.AccessLogOrderByRelationAggregateInput
   _relevance?: Prisma.LoginOrderByRelevanceInput
 }
 
@@ -200,7 +198,6 @@ export type LoginWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumRoleFilter<"Login"> | $Enums.Role
   patient?: Prisma.XOR<Prisma.PatientNullableScalarRelationFilter, Prisma.PatientWhereInput> | null
   doctor?: Prisma.XOR<Prisma.DoctorNullableScalarRelationFilter, Prisma.DoctorWhereInput> | null
-  accessLogs?: Prisma.AccessLogListRelationFilter
 }, "user_id" | "username">
 
 export type LoginOrderByWithAggregationInput = {
@@ -230,7 +227,6 @@ export type LoginCreateInput = {
   role: $Enums.Role
   patient?: Prisma.PatientCreateNestedOneWithoutLoginInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutLoginInput
-  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutUserInput
 }
 
 export type LoginUncheckedCreateInput = {
@@ -240,7 +236,6 @@ export type LoginUncheckedCreateInput = {
   role: $Enums.Role
   patient?: Prisma.PatientUncheckedCreateNestedOneWithoutLoginInput
   doctor?: Prisma.DoctorUncheckedCreateNestedOneWithoutLoginInput
-  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type LoginUpdateInput = {
@@ -250,7 +245,6 @@ export type LoginUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient?: Prisma.PatientUpdateOneWithoutLoginNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutLoginNestedInput
-  accessLogs?: Prisma.AccessLogUpdateManyWithoutUserNestedInput
 }
 
 export type LoginUncheckedUpdateInput = {
@@ -260,7 +254,6 @@ export type LoginUncheckedUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient?: Prisma.PatientUncheckedUpdateOneWithoutLoginNestedInput
   doctor?: Prisma.DoctorUncheckedUpdateOneWithoutLoginNestedInput
-  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type LoginCreateManyInput = {
@@ -348,27 +341,12 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
-export type LoginCreateNestedOneWithoutAccessLogsInput = {
-  create?: Prisma.XOR<Prisma.LoginCreateWithoutAccessLogsInput, Prisma.LoginUncheckedCreateWithoutAccessLogsInput>
-  connectOrCreate?: Prisma.LoginCreateOrConnectWithoutAccessLogsInput
-  connect?: Prisma.LoginWhereUniqueInput
-}
-
-export type LoginUpdateOneRequiredWithoutAccessLogsNestedInput = {
-  create?: Prisma.XOR<Prisma.LoginCreateWithoutAccessLogsInput, Prisma.LoginUncheckedCreateWithoutAccessLogsInput>
-  connectOrCreate?: Prisma.LoginCreateOrConnectWithoutAccessLogsInput
-  upsert?: Prisma.LoginUpsertWithoutAccessLogsInput
-  connect?: Prisma.LoginWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.LoginUpdateToOneWithWhereWithoutAccessLogsInput, Prisma.LoginUpdateWithoutAccessLogsInput>, Prisma.LoginUncheckedUpdateWithoutAccessLogsInput>
-}
-
 export type LoginCreateWithoutPatientInput = {
   user_id?: string
   username: string
   hashed_password: string
   role: $Enums.Role
   doctor?: Prisma.DoctorCreateNestedOneWithoutLoginInput
-  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutUserInput
 }
 
 export type LoginUncheckedCreateWithoutPatientInput = {
@@ -377,7 +355,6 @@ export type LoginUncheckedCreateWithoutPatientInput = {
   hashed_password: string
   role: $Enums.Role
   doctor?: Prisma.DoctorUncheckedCreateNestedOneWithoutLoginInput
-  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type LoginCreateOrConnectWithoutPatientInput = {
@@ -402,7 +379,6 @@ export type LoginUpdateWithoutPatientInput = {
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   doctor?: Prisma.DoctorUpdateOneWithoutLoginNestedInput
-  accessLogs?: Prisma.AccessLogUpdateManyWithoutUserNestedInput
 }
 
 export type LoginUncheckedUpdateWithoutPatientInput = {
@@ -411,7 +387,6 @@ export type LoginUncheckedUpdateWithoutPatientInput = {
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   doctor?: Prisma.DoctorUncheckedUpdateOneWithoutLoginNestedInput
-  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type LoginCreateWithoutDoctorInput = {
@@ -420,7 +395,6 @@ export type LoginCreateWithoutDoctorInput = {
   hashed_password: string
   role: $Enums.Role
   patient?: Prisma.PatientCreateNestedOneWithoutLoginInput
-  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutUserInput
 }
 
 export type LoginUncheckedCreateWithoutDoctorInput = {
@@ -429,7 +403,6 @@ export type LoginUncheckedCreateWithoutDoctorInput = {
   hashed_password: string
   role: $Enums.Role
   patient?: Prisma.PatientUncheckedCreateNestedOneWithoutLoginInput
-  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type LoginCreateOrConnectWithoutDoctorInput = {
@@ -454,7 +427,6 @@ export type LoginUpdateWithoutDoctorInput = {
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient?: Prisma.PatientUpdateOneWithoutLoginNestedInput
-  accessLogs?: Prisma.AccessLogUpdateManyWithoutUserNestedInput
 }
 
 export type LoginUncheckedUpdateWithoutDoctorInput = {
@@ -463,90 +435,8 @@ export type LoginUncheckedUpdateWithoutDoctorInput = {
   hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   patient?: Prisma.PatientUncheckedUpdateOneWithoutLoginNestedInput
-  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type LoginCreateWithoutAccessLogsInput = {
-  user_id?: string
-  username: string
-  hashed_password: string
-  role: $Enums.Role
-  patient?: Prisma.PatientCreateNestedOneWithoutLoginInput
-  doctor?: Prisma.DoctorCreateNestedOneWithoutLoginInput
-}
-
-export type LoginUncheckedCreateWithoutAccessLogsInput = {
-  user_id?: string
-  username: string
-  hashed_password: string
-  role: $Enums.Role
-  patient?: Prisma.PatientUncheckedCreateNestedOneWithoutLoginInput
-  doctor?: Prisma.DoctorUncheckedCreateNestedOneWithoutLoginInput
-}
-
-export type LoginCreateOrConnectWithoutAccessLogsInput = {
-  where: Prisma.LoginWhereUniqueInput
-  create: Prisma.XOR<Prisma.LoginCreateWithoutAccessLogsInput, Prisma.LoginUncheckedCreateWithoutAccessLogsInput>
-}
-
-export type LoginUpsertWithoutAccessLogsInput = {
-  update: Prisma.XOR<Prisma.LoginUpdateWithoutAccessLogsInput, Prisma.LoginUncheckedUpdateWithoutAccessLogsInput>
-  create: Prisma.XOR<Prisma.LoginCreateWithoutAccessLogsInput, Prisma.LoginUncheckedCreateWithoutAccessLogsInput>
-  where?: Prisma.LoginWhereInput
-}
-
-export type LoginUpdateToOneWithWhereWithoutAccessLogsInput = {
-  where?: Prisma.LoginWhereInput
-  data: Prisma.XOR<Prisma.LoginUpdateWithoutAccessLogsInput, Prisma.LoginUncheckedUpdateWithoutAccessLogsInput>
-}
-
-export type LoginUpdateWithoutAccessLogsInput = {
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
-  hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  patient?: Prisma.PatientUpdateOneWithoutLoginNestedInput
-  doctor?: Prisma.DoctorUpdateOneWithoutLoginNestedInput
-}
-
-export type LoginUncheckedUpdateWithoutAccessLogsInput = {
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
-  hashed_password?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  patient?: Prisma.PatientUncheckedUpdateOneWithoutLoginNestedInput
-  doctor?: Prisma.DoctorUncheckedUpdateOneWithoutLoginNestedInput
-}
-
-
-/**
- * Count Type LoginCountOutputType
- */
-
-export type LoginCountOutputType = {
-  accessLogs: number
-}
-
-export type LoginCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  accessLogs?: boolean | LoginCountOutputTypeCountAccessLogsArgs
-}
-
-/**
- * LoginCountOutputType without action
- */
-export type LoginCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the LoginCountOutputType
-   */
-  select?: Prisma.LoginCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * LoginCountOutputType without action
- */
-export type LoginCountOutputTypeCountAccessLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AccessLogWhereInput
-}
 
 
 export type LoginSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -556,8 +446,6 @@ export type LoginSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   role?: boolean
   patient?: boolean | Prisma.Login$patientArgs<ExtArgs>
   doctor?: boolean | Prisma.Login$doctorArgs<ExtArgs>
-  accessLogs?: boolean | Prisma.Login$accessLogsArgs<ExtArgs>
-  _count?: boolean | Prisma.LoginCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["login"]>
 
 
@@ -573,8 +461,6 @@ export type LoginOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type LoginInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   patient?: boolean | Prisma.Login$patientArgs<ExtArgs>
   doctor?: boolean | Prisma.Login$doctorArgs<ExtArgs>
-  accessLogs?: boolean | Prisma.Login$accessLogsArgs<ExtArgs>
-  _count?: boolean | Prisma.LoginCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $LoginPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -582,7 +468,6 @@ export type $LoginPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     patient: Prisma.$PatientPayload<ExtArgs> | null
     doctor: Prisma.$DoctorPayload<ExtArgs> | null
-    accessLogs: Prisma.$AccessLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     user_id: string
@@ -931,7 +816,6 @@ export interface Prisma__LoginClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   patient<T extends Prisma.Login$patientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Login$patientArgs<ExtArgs>>): Prisma.Prisma__PatientClient<runtime.Types.Result.GetResult<Prisma.$PatientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   doctor<T extends Prisma.Login$doctorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Login$doctorArgs<ExtArgs>>): Prisma.Prisma__DoctorClient<runtime.Types.Result.GetResult<Prisma.$DoctorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  accessLogs<T extends Prisma.Login$accessLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Login$accessLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccessLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1343,30 +1227,6 @@ export type Login$doctorArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.DoctorInclude<ExtArgs> | null
   where?: Prisma.DoctorWhereInput
-}
-
-/**
- * Login.accessLogs
- */
-export type Login$accessLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AccessLog
-   */
-  select?: Prisma.AccessLogSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AccessLog
-   */
-  omit?: Prisma.AccessLogOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AccessLogInclude<ExtArgs> | null
-  where?: Prisma.AccessLogWhereInput
-  orderBy?: Prisma.AccessLogOrderByWithRelationInput | Prisma.AccessLogOrderByWithRelationInput[]
-  cursor?: Prisma.AccessLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AccessLogScalarFieldEnum | Prisma.AccessLogScalarFieldEnum[]
 }
 
 /**

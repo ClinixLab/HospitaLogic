@@ -82,8 +82,3 @@ export type BillTreatment = Prisma.BillTreatmentModel
  * 
  */
 export type Login = Prisma.LoginModel
-/**
- * Model AccessLog
- * 
- */
-export type AccessLog = Prisma.AccessLogModel
