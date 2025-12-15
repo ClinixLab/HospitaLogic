@@ -225,6 +225,7 @@ export type TreatmentWhereInput = {
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   doctor?: Prisma.XOR<Prisma.DoctorScalarRelationFilter, Prisma.DoctorWhereInput>
   diagnosis?: Prisma.XOR<Prisma.DiagnosisScalarRelationFilter, Prisma.DiagnosisWhereInput>
+  accessLogs?: Prisma.AccessLogListRelationFilter
 }
 
 export type TreatmentOrderByWithRelationInput = {
@@ -238,6 +239,7 @@ export type TreatmentOrderByWithRelationInput = {
   patient?: Prisma.PatientOrderByWithRelationInput
   doctor?: Prisma.DoctorOrderByWithRelationInput
   diagnosis?: Prisma.DiagnosisOrderByWithRelationInput
+  accessLogs?: Prisma.AccessLogOrderByRelationAggregateInput
   _relevance?: Prisma.TreatmentOrderByRelevanceInput
 }
 
@@ -255,6 +257,7 @@ export type TreatmentWhereUniqueInput = Prisma.AtLeast<{
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   doctor?: Prisma.XOR<Prisma.DoctorScalarRelationFilter, Prisma.DoctorWhereInput>
   diagnosis?: Prisma.XOR<Prisma.DiagnosisScalarRelationFilter, Prisma.DiagnosisWhereInput>
+  accessLogs?: Prisma.AccessLogListRelationFilter
 }, "treatment_id">
 
 export type TreatmentOrderByWithAggregationInput = {
@@ -288,6 +291,7 @@ export type TreatmentCreateInput = {
   patient: Prisma.PatientCreateNestedOneWithoutTreatmentsInput
   doctor: Prisma.DoctorCreateNestedOneWithoutTreatmentsInput
   diagnosis: Prisma.DiagnosisCreateNestedOneWithoutTreatmentsInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentUncheckedCreateInput = {
@@ -298,6 +302,7 @@ export type TreatmentUncheckedCreateInput = {
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
   billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentUpdateInput = {
@@ -307,6 +312,7 @@ export type TreatmentUpdateInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutTreatmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutTreatmentsNestedInput
   diagnosis?: Prisma.DiagnosisUpdateOneRequiredWithoutTreatmentsNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateInput = {
@@ -317,6 +323,7 @@ export type TreatmentUncheckedUpdateInput = {
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
   billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentCreateManyInput = {
@@ -392,6 +399,11 @@ export type TreatmentSumOrderByAggregateInput = {
 export type TreatmentScalarRelationFilter = {
   is?: Prisma.TreatmentWhereInput
   isNot?: Prisma.TreatmentWhereInput
+}
+
+export type TreatmentNullableScalarRelationFilter = {
+  is?: Prisma.TreatmentWhereInput | null
+  isNot?: Prisma.TreatmentWhereInput | null
 }
 
 export type TreatmentCreateNestedManyWithoutPatientInput = {
@@ -548,12 +560,29 @@ export type TreatmentUpdateOneRequiredWithoutBillTreatmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TreatmentUpdateToOneWithWhereWithoutBillTreatmentsInput, Prisma.TreatmentUpdateWithoutBillTreatmentsInput>, Prisma.TreatmentUncheckedUpdateWithoutBillTreatmentsInput>
 }
 
+export type TreatmentCreateNestedOneWithoutAccessLogsInput = {
+  create?: Prisma.XOR<Prisma.TreatmentCreateWithoutAccessLogsInput, Prisma.TreatmentUncheckedCreateWithoutAccessLogsInput>
+  connectOrCreate?: Prisma.TreatmentCreateOrConnectWithoutAccessLogsInput
+  connect?: Prisma.TreatmentWhereUniqueInput
+}
+
+export type TreatmentUpdateOneWithoutAccessLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.TreatmentCreateWithoutAccessLogsInput, Prisma.TreatmentUncheckedCreateWithoutAccessLogsInput>
+  connectOrCreate?: Prisma.TreatmentCreateOrConnectWithoutAccessLogsInput
+  upsert?: Prisma.TreatmentUpsertWithoutAccessLogsInput
+  disconnect?: Prisma.TreatmentWhereInput | boolean
+  delete?: Prisma.TreatmentWhereInput | boolean
+  connect?: Prisma.TreatmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TreatmentUpdateToOneWithWhereWithoutAccessLogsInput, Prisma.TreatmentUpdateWithoutAccessLogsInput>, Prisma.TreatmentUncheckedUpdateWithoutAccessLogsInput>
+}
+
 export type TreatmentCreateWithoutPatientInput = {
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineCreateNestedManyWithoutTreatmentInput
   billTreatments?: Prisma.BillTreatmentCreateNestedManyWithoutTreatmentInput
   doctor: Prisma.DoctorCreateNestedOneWithoutTreatmentsInput
   diagnosis: Prisma.DiagnosisCreateNestedOneWithoutTreatmentsInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentUncheckedCreateWithoutPatientInput = {
@@ -563,6 +592,7 @@ export type TreatmentUncheckedCreateWithoutPatientInput = {
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
   billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentCreateOrConnectWithoutPatientInput = {
@@ -608,6 +638,7 @@ export type TreatmentCreateWithoutDiagnosisInput = {
   billTreatments?: Prisma.BillTreatmentCreateNestedManyWithoutTreatmentInput
   patient: Prisma.PatientCreateNestedOneWithoutTreatmentsInput
   doctor: Prisma.DoctorCreateNestedOneWithoutTreatmentsInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentUncheckedCreateWithoutDiagnosisInput = {
@@ -617,6 +648,7 @@ export type TreatmentUncheckedCreateWithoutDiagnosisInput = {
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
   billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentCreateOrConnectWithoutDiagnosisInput = {
@@ -651,6 +683,7 @@ export type TreatmentCreateWithoutDoctorInput = {
   billTreatments?: Prisma.BillTreatmentCreateNestedManyWithoutTreatmentInput
   patient: Prisma.PatientCreateNestedOneWithoutTreatmentsInput
   diagnosis: Prisma.DiagnosisCreateNestedOneWithoutTreatmentsInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentUncheckedCreateWithoutDoctorInput = {
@@ -660,6 +693,7 @@ export type TreatmentUncheckedCreateWithoutDoctorInput = {
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
   billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentCreateOrConnectWithoutDoctorInput = {
@@ -694,6 +728,7 @@ export type TreatmentCreateWithoutMedicinesInput = {
   patient: Prisma.PatientCreateNestedOneWithoutTreatmentsInput
   doctor: Prisma.DoctorCreateNestedOneWithoutTreatmentsInput
   diagnosis: Prisma.DiagnosisCreateNestedOneWithoutTreatmentsInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentUncheckedCreateWithoutMedicinesInput = {
@@ -703,6 +738,7 @@ export type TreatmentUncheckedCreateWithoutMedicinesInput = {
   diagnosis_id: number
   treatment_date: Date | string
   billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentCreateOrConnectWithoutMedicinesInput = {
@@ -727,6 +763,7 @@ export type TreatmentUpdateWithoutMedicinesInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutTreatmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutTreatmentsNestedInput
   diagnosis?: Prisma.DiagnosisUpdateOneRequiredWithoutTreatmentsNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateWithoutMedicinesInput = {
@@ -736,6 +773,7 @@ export type TreatmentUncheckedUpdateWithoutMedicinesInput = {
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentCreateWithoutBillTreatmentsInput = {
@@ -744,6 +782,7 @@ export type TreatmentCreateWithoutBillTreatmentsInput = {
   patient: Prisma.PatientCreateNestedOneWithoutTreatmentsInput
   doctor: Prisma.DoctorCreateNestedOneWithoutTreatmentsInput
   diagnosis: Prisma.DiagnosisCreateNestedOneWithoutTreatmentsInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentUncheckedCreateWithoutBillTreatmentsInput = {
@@ -753,6 +792,7 @@ export type TreatmentUncheckedCreateWithoutBillTreatmentsInput = {
   diagnosis_id: number
   treatment_date: Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutTreatmentInput
 }
 
 export type TreatmentCreateOrConnectWithoutBillTreatmentsInput = {
@@ -777,6 +817,7 @@ export type TreatmentUpdateWithoutBillTreatmentsInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutTreatmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutTreatmentsNestedInput
   diagnosis?: Prisma.DiagnosisUpdateOneRequiredWithoutTreatmentsNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateWithoutBillTreatmentsInput = {
@@ -786,6 +827,61 @@ export type TreatmentUncheckedUpdateWithoutBillTreatmentsInput = {
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutTreatmentNestedInput
+}
+
+export type TreatmentCreateWithoutAccessLogsInput = {
+  treatment_date: Date | string
+  medicines?: Prisma.TreatmentMedicineCreateNestedManyWithoutTreatmentInput
+  billTreatments?: Prisma.BillTreatmentCreateNestedManyWithoutTreatmentInput
+  patient: Prisma.PatientCreateNestedOneWithoutTreatmentsInput
+  doctor: Prisma.DoctorCreateNestedOneWithoutTreatmentsInput
+  diagnosis: Prisma.DiagnosisCreateNestedOneWithoutTreatmentsInput
+}
+
+export type TreatmentUncheckedCreateWithoutAccessLogsInput = {
+  treatment_id?: number
+  patient_id: string
+  doctor_id: string
+  diagnosis_id: number
+  treatment_date: Date | string
+  medicines?: Prisma.TreatmentMedicineUncheckedCreateNestedManyWithoutTreatmentInput
+  billTreatments?: Prisma.BillTreatmentUncheckedCreateNestedManyWithoutTreatmentInput
+}
+
+export type TreatmentCreateOrConnectWithoutAccessLogsInput = {
+  where: Prisma.TreatmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.TreatmentCreateWithoutAccessLogsInput, Prisma.TreatmentUncheckedCreateWithoutAccessLogsInput>
+}
+
+export type TreatmentUpsertWithoutAccessLogsInput = {
+  update: Prisma.XOR<Prisma.TreatmentUpdateWithoutAccessLogsInput, Prisma.TreatmentUncheckedUpdateWithoutAccessLogsInput>
+  create: Prisma.XOR<Prisma.TreatmentCreateWithoutAccessLogsInput, Prisma.TreatmentUncheckedCreateWithoutAccessLogsInput>
+  where?: Prisma.TreatmentWhereInput
+}
+
+export type TreatmentUpdateToOneWithWhereWithoutAccessLogsInput = {
+  where?: Prisma.TreatmentWhereInput
+  data: Prisma.XOR<Prisma.TreatmentUpdateWithoutAccessLogsInput, Prisma.TreatmentUncheckedUpdateWithoutAccessLogsInput>
+}
+
+export type TreatmentUpdateWithoutAccessLogsInput = {
+  treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  medicines?: Prisma.TreatmentMedicineUpdateManyWithoutTreatmentNestedInput
+  billTreatments?: Prisma.BillTreatmentUpdateManyWithoutTreatmentNestedInput
+  patient?: Prisma.PatientUpdateOneRequiredWithoutTreatmentsNestedInput
+  doctor?: Prisma.DoctorUpdateOneRequiredWithoutTreatmentsNestedInput
+  diagnosis?: Prisma.DiagnosisUpdateOneRequiredWithoutTreatmentsNestedInput
+}
+
+export type TreatmentUncheckedUpdateWithoutAccessLogsInput = {
+  treatment_id?: Prisma.IntFieldUpdateOperationsInput | number
+  patient_id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctor_id?: Prisma.StringFieldUpdateOperationsInput | string
+  diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
+  treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
+  billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentCreateManyPatientInput = {
@@ -801,6 +897,7 @@ export type TreatmentUpdateWithoutPatientInput = {
   billTreatments?: Prisma.BillTreatmentUpdateManyWithoutTreatmentNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutTreatmentsNestedInput
   diagnosis?: Prisma.DiagnosisUpdateOneRequiredWithoutTreatmentsNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateWithoutPatientInput = {
@@ -810,6 +907,7 @@ export type TreatmentUncheckedUpdateWithoutPatientInput = {
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
   billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateManyWithoutPatientInput = {
@@ -832,6 +930,7 @@ export type TreatmentUpdateWithoutDiagnosisInput = {
   billTreatments?: Prisma.BillTreatmentUpdateManyWithoutTreatmentNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutTreatmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneRequiredWithoutTreatmentsNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateWithoutDiagnosisInput = {
@@ -841,6 +940,7 @@ export type TreatmentUncheckedUpdateWithoutDiagnosisInput = {
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
   billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateManyWithoutDiagnosisInput = {
@@ -863,6 +963,7 @@ export type TreatmentUpdateWithoutDoctorInput = {
   billTreatments?: Prisma.BillTreatmentUpdateManyWithoutTreatmentNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutTreatmentsNestedInput
   diagnosis?: Prisma.DiagnosisUpdateOneRequiredWithoutTreatmentsNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateWithoutDoctorInput = {
@@ -872,6 +973,7 @@ export type TreatmentUncheckedUpdateWithoutDoctorInput = {
   treatment_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medicines?: Prisma.TreatmentMedicineUncheckedUpdateManyWithoutTreatmentNestedInput
   billTreatments?: Prisma.BillTreatmentUncheckedUpdateManyWithoutTreatmentNestedInput
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutTreatmentNestedInput
 }
 
 export type TreatmentUncheckedUpdateManyWithoutDoctorInput = {
@@ -889,11 +991,13 @@ export type TreatmentUncheckedUpdateManyWithoutDoctorInput = {
 export type TreatmentCountOutputType = {
   medicines: number
   billTreatments: number
+  accessLogs: number
 }
 
 export type TreatmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   medicines?: boolean | TreatmentCountOutputTypeCountMedicinesArgs
   billTreatments?: boolean | TreatmentCountOutputTypeCountBillTreatmentsArgs
+  accessLogs?: boolean | TreatmentCountOutputTypeCountAccessLogsArgs
 }
 
 /**
@@ -920,6 +1024,13 @@ export type TreatmentCountOutputTypeCountBillTreatmentsArgs<ExtArgs extends runt
   where?: Prisma.BillTreatmentWhereInput
 }
 
+/**
+ * TreatmentCountOutputType without action
+ */
+export type TreatmentCountOutputTypeCountAccessLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccessLogWhereInput
+}
+
 
 export type TreatmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   treatment_id?: boolean
@@ -932,6 +1043,7 @@ export type TreatmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.DiagnosisDefaultArgs<ExtArgs>
+  accessLogs?: boolean | Prisma.Treatment$accessLogsArgs<ExtArgs>
   _count?: boolean | Prisma.TreatmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["treatment"]>
 
@@ -952,6 +1064,7 @@ export type TreatmentInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorDefaultArgs<ExtArgs>
   diagnosis?: boolean | Prisma.DiagnosisDefaultArgs<ExtArgs>
+  accessLogs?: boolean | Prisma.Treatment$accessLogsArgs<ExtArgs>
   _count?: boolean | Prisma.TreatmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -963,6 +1076,7 @@ export type $TreatmentPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     patient: Prisma.$PatientPayload<ExtArgs>
     doctor: Prisma.$DoctorPayload<ExtArgs>
     diagnosis: Prisma.$DiagnosisPayload<ExtArgs>
+    accessLogs: Prisma.$AccessLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     treatment_id: number
@@ -1315,6 +1429,7 @@ export interface Prisma__TreatmentClient<T, Null = never, ExtArgs extends runtim
   patient<T extends Prisma.PatientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PatientDefaultArgs<ExtArgs>>): Prisma.Prisma__PatientClient<runtime.Types.Result.GetResult<Prisma.$PatientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   doctor<T extends Prisma.DoctorDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorDefaultArgs<ExtArgs>>): Prisma.Prisma__DoctorClient<runtime.Types.Result.GetResult<Prisma.$DoctorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   diagnosis<T extends Prisma.DiagnosisDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DiagnosisDefaultArgs<ExtArgs>>): Prisma.Prisma__DiagnosisClient<runtime.Types.Result.GetResult<Prisma.$DiagnosisPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  accessLogs<T extends Prisma.Treatment$accessLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Treatment$accessLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccessLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1737,6 +1852,30 @@ export type Treatment$billTreatmentsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.BillTreatmentScalarFieldEnum | Prisma.BillTreatmentScalarFieldEnum[]
+}
+
+/**
+ * Treatment.accessLogs
+ */
+export type Treatment$accessLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccessLog
+   */
+  select?: Prisma.AccessLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AccessLog
+   */
+  omit?: Prisma.AccessLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccessLogInclude<ExtArgs> | null
+  where?: Prisma.AccessLogWhereInput
+  orderBy?: Prisma.AccessLogOrderByWithRelationInput | Prisma.AccessLogOrderByWithRelationInput[]
+  cursor?: Prisma.AccessLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccessLogScalarFieldEnum | Prisma.AccessLogScalarFieldEnum[]
 }
 
 /**

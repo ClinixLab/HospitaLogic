@@ -221,7 +221,9 @@ export const AccessLogScalarFieldEnum = {
   entity_type: 'entity_type',
   entity_id: 'entity_id',
   action: 'action',
-  access_time: 'access_time'
+  access_time: 'access_time',
+  treatment_id: 'treatment_id',
+  diagnosis_id: 'diagnosis_id'
 } as const
 
 export type AccessLogScalarFieldEnum = (typeof AccessLogScalarFieldEnum)[keyof typeof AccessLogScalarFieldEnum]

@@ -201,6 +201,7 @@ export type DiagnosisWhereInput = {
   code?: Prisma.StringFilter<"Diagnosis"> | string
   description?: Prisma.StringFilter<"Diagnosis"> | string
   treatments?: Prisma.TreatmentListRelationFilter
+  accessLogs?: Prisma.AccessLogListRelationFilter
 }
 
 export type DiagnosisOrderByWithRelationInput = {
@@ -208,6 +209,7 @@ export type DiagnosisOrderByWithRelationInput = {
   code?: Prisma.SortOrder
   description?: Prisma.SortOrder
   treatments?: Prisma.TreatmentOrderByRelationAggregateInput
+  accessLogs?: Prisma.AccessLogOrderByRelationAggregateInput
   _relevance?: Prisma.DiagnosisOrderByRelevanceInput
 }
 
@@ -219,6 +221,7 @@ export type DiagnosisWhereUniqueInput = Prisma.AtLeast<{
   code?: Prisma.StringFilter<"Diagnosis"> | string
   description?: Prisma.StringFilter<"Diagnosis"> | string
   treatments?: Prisma.TreatmentListRelationFilter
+  accessLogs?: Prisma.AccessLogListRelationFilter
 }, "diagnosis_id">
 
 export type DiagnosisOrderByWithAggregationInput = {
@@ -245,6 +248,7 @@ export type DiagnosisCreateInput = {
   code: string
   description: string
   treatments?: Prisma.TreatmentCreateNestedManyWithoutDiagnosisInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutDiagnosisInput
 }
 
 export type DiagnosisUncheckedCreateInput = {
@@ -252,12 +256,14 @@ export type DiagnosisUncheckedCreateInput = {
   code: string
   description: string
   treatments?: Prisma.TreatmentUncheckedCreateNestedManyWithoutDiagnosisInput
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutDiagnosisInput
 }
 
 export type DiagnosisUpdateInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   treatments?: Prisma.TreatmentUpdateManyWithoutDiagnosisNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutDiagnosisNestedInput
 }
 
 export type DiagnosisUncheckedUpdateInput = {
@@ -265,6 +271,7 @@ export type DiagnosisUncheckedUpdateInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   treatments?: Prisma.TreatmentUncheckedUpdateManyWithoutDiagnosisNestedInput
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutDiagnosisNestedInput
 }
 
 export type DiagnosisCreateManyInput = {
@@ -321,6 +328,11 @@ export type DiagnosisScalarRelationFilter = {
   isNot?: Prisma.DiagnosisWhereInput
 }
 
+export type DiagnosisNullableScalarRelationFilter = {
+  is?: Prisma.DiagnosisWhereInput | null
+  isNot?: Prisma.DiagnosisWhereInput | null
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -343,15 +355,33 @@ export type DiagnosisUpdateOneRequiredWithoutTreatmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DiagnosisUpdateToOneWithWhereWithoutTreatmentsInput, Prisma.DiagnosisUpdateWithoutTreatmentsInput>, Prisma.DiagnosisUncheckedUpdateWithoutTreatmentsInput>
 }
 
+export type DiagnosisCreateNestedOneWithoutAccessLogsInput = {
+  create?: Prisma.XOR<Prisma.DiagnosisCreateWithoutAccessLogsInput, Prisma.DiagnosisUncheckedCreateWithoutAccessLogsInput>
+  connectOrCreate?: Prisma.DiagnosisCreateOrConnectWithoutAccessLogsInput
+  connect?: Prisma.DiagnosisWhereUniqueInput
+}
+
+export type DiagnosisUpdateOneWithoutAccessLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.DiagnosisCreateWithoutAccessLogsInput, Prisma.DiagnosisUncheckedCreateWithoutAccessLogsInput>
+  connectOrCreate?: Prisma.DiagnosisCreateOrConnectWithoutAccessLogsInput
+  upsert?: Prisma.DiagnosisUpsertWithoutAccessLogsInput
+  disconnect?: Prisma.DiagnosisWhereInput | boolean
+  delete?: Prisma.DiagnosisWhereInput | boolean
+  connect?: Prisma.DiagnosisWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DiagnosisUpdateToOneWithWhereWithoutAccessLogsInput, Prisma.DiagnosisUpdateWithoutAccessLogsInput>, Prisma.DiagnosisUncheckedUpdateWithoutAccessLogsInput>
+}
+
 export type DiagnosisCreateWithoutTreatmentsInput = {
   code: string
   description: string
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutDiagnosisInput
 }
 
 export type DiagnosisUncheckedCreateWithoutTreatmentsInput = {
   diagnosis_id?: number
   code: string
   description: string
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutDiagnosisInput
 }
 
 export type DiagnosisCreateOrConnectWithoutTreatmentsInput = {
@@ -373,12 +403,56 @@ export type DiagnosisUpdateToOneWithWhereWithoutTreatmentsInput = {
 export type DiagnosisUpdateWithoutTreatmentsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutDiagnosisNestedInput
 }
 
 export type DiagnosisUncheckedUpdateWithoutTreatmentsInput = {
   diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutDiagnosisNestedInput
+}
+
+export type DiagnosisCreateWithoutAccessLogsInput = {
+  code: string
+  description: string
+  treatments?: Prisma.TreatmentCreateNestedManyWithoutDiagnosisInput
+}
+
+export type DiagnosisUncheckedCreateWithoutAccessLogsInput = {
+  diagnosis_id?: number
+  code: string
+  description: string
+  treatments?: Prisma.TreatmentUncheckedCreateNestedManyWithoutDiagnosisInput
+}
+
+export type DiagnosisCreateOrConnectWithoutAccessLogsInput = {
+  where: Prisma.DiagnosisWhereUniqueInput
+  create: Prisma.XOR<Prisma.DiagnosisCreateWithoutAccessLogsInput, Prisma.DiagnosisUncheckedCreateWithoutAccessLogsInput>
+}
+
+export type DiagnosisUpsertWithoutAccessLogsInput = {
+  update: Prisma.XOR<Prisma.DiagnosisUpdateWithoutAccessLogsInput, Prisma.DiagnosisUncheckedUpdateWithoutAccessLogsInput>
+  create: Prisma.XOR<Prisma.DiagnosisCreateWithoutAccessLogsInput, Prisma.DiagnosisUncheckedCreateWithoutAccessLogsInput>
+  where?: Prisma.DiagnosisWhereInput
+}
+
+export type DiagnosisUpdateToOneWithWhereWithoutAccessLogsInput = {
+  where?: Prisma.DiagnosisWhereInput
+  data: Prisma.XOR<Prisma.DiagnosisUpdateWithoutAccessLogsInput, Prisma.DiagnosisUncheckedUpdateWithoutAccessLogsInput>
+}
+
+export type DiagnosisUpdateWithoutAccessLogsInput = {
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  treatments?: Prisma.TreatmentUpdateManyWithoutDiagnosisNestedInput
+}
+
+export type DiagnosisUncheckedUpdateWithoutAccessLogsInput = {
+  diagnosis_id?: Prisma.IntFieldUpdateOperationsInput | number
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  treatments?: Prisma.TreatmentUncheckedUpdateManyWithoutDiagnosisNestedInput
 }
 
 
@@ -388,10 +462,12 @@ export type DiagnosisUncheckedUpdateWithoutTreatmentsInput = {
 
 export type DiagnosisCountOutputType = {
   treatments: number
+  accessLogs: number
 }
 
 export type DiagnosisCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   treatments?: boolean | DiagnosisCountOutputTypeCountTreatmentsArgs
+  accessLogs?: boolean | DiagnosisCountOutputTypeCountAccessLogsArgs
 }
 
 /**
@@ -411,12 +487,20 @@ export type DiagnosisCountOutputTypeCountTreatmentsArgs<ExtArgs extends runtime.
   where?: Prisma.TreatmentWhereInput
 }
 
+/**
+ * DiagnosisCountOutputType without action
+ */
+export type DiagnosisCountOutputTypeCountAccessLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccessLogWhereInput
+}
+
 
 export type DiagnosisSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   diagnosis_id?: boolean
   code?: boolean
   description?: boolean
   treatments?: boolean | Prisma.Diagnosis$treatmentsArgs<ExtArgs>
+  accessLogs?: boolean | Prisma.Diagnosis$accessLogsArgs<ExtArgs>
   _count?: boolean | Prisma.DiagnosisCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["diagnosis"]>
 
@@ -431,6 +515,7 @@ export type DiagnosisSelectScalar = {
 export type DiagnosisOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"diagnosis_id" | "code" | "description", ExtArgs["result"]["diagnosis"]>
 export type DiagnosisInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   treatments?: boolean | Prisma.Diagnosis$treatmentsArgs<ExtArgs>
+  accessLogs?: boolean | Prisma.Diagnosis$accessLogsArgs<ExtArgs>
   _count?: boolean | Prisma.DiagnosisCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -438,6 +523,7 @@ export type $DiagnosisPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Diagnosis"
   objects: {
     treatments: Prisma.$TreatmentPayload<ExtArgs>[]
+    accessLogs: Prisma.$AccessLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     diagnosis_id: number
@@ -784,6 +870,7 @@ readonly fields: DiagnosisFieldRefs;
 export interface Prisma__DiagnosisClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   treatments<T extends Prisma.Diagnosis$treatmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Diagnosis$treatmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TreatmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  accessLogs<T extends Prisma.Diagnosis$accessLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Diagnosis$accessLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccessLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1180,6 +1267,30 @@ export type Diagnosis$treatmentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.TreatmentScalarFieldEnum | Prisma.TreatmentScalarFieldEnum[]
+}
+
+/**
+ * Diagnosis.accessLogs
+ */
+export type Diagnosis$accessLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccessLog
+   */
+  select?: Prisma.AccessLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AccessLog
+   */
+  omit?: Prisma.AccessLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccessLogInclude<ExtArgs> | null
+  where?: Prisma.AccessLogWhereInput
+  orderBy?: Prisma.AccessLogOrderByWithRelationInput | Prisma.AccessLogOrderByWithRelationInput[]
+  cursor?: Prisma.AccessLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccessLogScalarFieldEnum | Prisma.AccessLogScalarFieldEnum[]
 }
 
 /**

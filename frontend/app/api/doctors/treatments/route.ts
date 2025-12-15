@@ -25,7 +25,6 @@ function isHM(s: string) {
   return /^\d{2}:\d{2}$/.test(s);
 }
 function toDateStartLocal(ymd: string) {
-  // ให้รูปแบบใกล้กับที่คุณ insert mockup (00:00:00)
   return new Date(`${ymd}T00:00:00`);
 }
 
@@ -48,7 +47,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "INVALID_INPUT" }, { status: 400 });
   }
 
-  // typed medicines
   const medicinesRaw = Array.isArray(body?.medicines) ? body.medicines : [];
   const medicines: SelectedMedicine[] = mergeSameMedicine(
     medicinesRaw
@@ -65,7 +63,6 @@ export async function POST(req: NextRequest) {
       )
   );
 
-  // validate follow-up if provided
   let followUpValid: { date: string; time: string } | null = null;
   if (follow_up) {
     const d = String((follow_up as any).date || "");
@@ -78,11 +75,11 @@ export async function POST(req: NextRequest) {
 
   try {
     if (followUpValid) {
-  const dt = toLocalDateTime(followUpValid.date, followUpValid.time);
-  if (!Number.isFinite(dt.getTime()) || dt.getTime() <= Date.now()) {
-    return NextResponse.json({ error: "FOLLOWUP_IN_PAST" }, { status: 400 });
-  }
-}
+      const dt = toLocalDateTime(followUpValid.date, followUpValid.time);
+      if (!Number.isFinite(dt.getTime()) || dt.getTime() <= Date.now()) {
+        return NextResponse.json({ error: "FOLLOWUP_IN_PAST" }, { status: 400 });
+      }
+    }
 
     const result = await prisma.$transaction(async (tx) => {
       const appt = await tx.appointment.findUnique({
@@ -177,35 +174,51 @@ export async function POST(req: NextRequest) {
         data: { status: "COMPLETED" as any },
       });
 
-      // logs
-      await tx.accessLog.createMany({
-        data: [
-          {
-            user_id: me.user_id,
-            entity_type: "Treatment",
-            entity_id: String(treatment.treatment_id),
-            action: "TREATMENT_CREATE",
-          },
-          {
-            user_id: me.user_id,
-            entity_type: "Appointment",
-            entity_id: String(appointment_id),
-            action: "APPOINTMENT_COMPLETE",
-          },
-          ...(bill_id
-            ? [
-                {
-                  user_id: me.user_id,
-                  entity_type: "Bill",
-                  entity_id: String(bill_id),
-                  action: "BILL_CREATE",
-                },
-              ]
-            : []),
-        ],
-      });
+      // ✅ logs (ใส่ treatment_id + diagnosis_id ตาม schema ใหม่)
+      const actorUserIds = [me.user_id, appt.patient_id]; // หมอ + คนไข้ (uuid)
 
-      // ✅ follow-up appointment (ไม่ให้พังทั้ง transaction ถ้าชนเวลา)
+const baseLogs = [
+  {
+    entity_type: "Treatment",
+    entity_id: String(treatment.treatment_id),
+    action: "TREATMENT_CREATE",
+  },
+  {
+    entity_type: "Appointment",
+    entity_id: String(appointment_id),
+    action: "APPOINTMENT_COMPLETE",
+  },
+  ...(bill_id
+    ? [
+        {
+          entity_type: "Bill",
+          entity_id: String(bill_id),
+          action: "BILL_CREATE",
+        },
+      ]
+    : []),
+];
+
+// ถ้ากลัว FK พังเพราะ user_id ไม่มีใน Login ให้เช็คก่อน (optional แต่แนะนำ)
+const existing = await tx.login.findMany({
+  where: { user_id: { in: actorUserIds } },
+  select: { user_id: true },
+});
+const existingSet = new Set(existing.map((x) => x.user_id));
+const safeUserIds = actorUserIds.filter((id) => existingSet.has(id));
+
+await tx.accessLog.createMany({
+  data: safeUserIds.flatMap((uid) =>
+    baseLogs.map((l) => ({
+      user_id: uid, // ✅ ตรงนี้แหละที่ต่างกัน
+      entity_type: l.entity_type,
+      entity_id: l.entity_id,
+      action: l.action,
+    }))
+  ),
+});
+
+      // follow-up appointment (ไม่ให้พังทั้ง transaction ถ้าชนเวลา)
       let follow_up_created: any = null;
       let follow_up_error: string | null = null;
 
@@ -224,16 +237,18 @@ export async function POST(req: NextRequest) {
 
           follow_up_created = created;
 
+          // ✅ log follow-up พร้อม treatment/diagnosis
           await tx.accessLog.create({
             data: {
               user_id: me.user_id,
               entity_type: "Appointment",
               entity_id: String(created.appointment_id),
               action: "FOLLOWUP_CREATE",
+              treatment_id: treatment.treatment_id,
+              diagnosis_id,
             },
           });
         } catch (e: any) {
-          // Prisma unique conflict
           if (e?.code === "P2002") follow_up_error = "FOLLOWUP_SLOT_TAKEN";
           else throw e;
         }
@@ -262,5 +277,4 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ error: msg }, { status: 500 });
   }
-
 }

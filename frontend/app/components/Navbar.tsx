@@ -31,6 +31,7 @@ export default function Navbar() {
         { href: "/", label: "หน้าแรก" },
         { href: "/doctors", label: "รายชื่อแพทย์" },
         { href: "/medicines", label: "รายการยา" },
+        { href: "/access-log", label: "ประวัติการใช้งาน" },
         { href: "/settings", label: "ตั้งค่า" }, 
       ]
     : [
